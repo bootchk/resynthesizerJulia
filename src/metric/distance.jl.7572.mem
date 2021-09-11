@@ -1,0 +1,74 @@
+        - #=
+        - Implementation of a metric.
+        - 
+        - From scratch.
+        - 
+        - You might not be able to include this,
+        - if you also defined another metric having the same signature.
+        - =#
+        - 
+        - 
+        - # TEMP, to get types
+        - using Colors
+        - 
+        - 
+        - #=
+        - Specialized for types from Colors module.
+        - Often: FixedPointNumbers.N0f8
+        - The specialization:
+        - 1) knows the components i.e. channels r,g,b
+        - 2) knows kinds of arithmetic (fixed point versus float)
+        - that could be used for channels
+        - =#
+        - function pointDifference(targetColor::RGB{T} where T, corpusColor::RGB{T} where T)::Float32
+        -     #=
+        -     Sum differences over the channels.
+        - 
+        -     Colors are not iterable over channels, but have getters r,g,b
+        - 
+        -     The type is one from Colors module.
+        -     Often: FixedPointNumbers.N0f8
+        -     See discussion of arithmetic on Julia docs.
+        -     May convert to float.
+        -     Saturated and wrapping arithmetic not available yet?
+        - 
+        -     It needs to not lose magnitude through adding plus and minus
+        -     =#
+        - 
+        -     #=
+        -     When T is FixedPointNumbers.N0f8,
+        -     1) difference (-)  could wrap, overflow, or saturate and still fit in N0F8
+        -     2) abs() might be better and also fit.
+        -     TODO resolve whether - yields type Float
+        - 
+        -     Anyway, the sum over channels does not fit in N0F8
+        -     (without losing accuracy due to overflow)
+        -     So we sum to a float.
+        -     =#
+        - 
+        -     sum::Float32 = zero(Float32)
+        - 
+        -     # println(typeof(targetColor.r))
+        0     sum += (targetColor.r - corpusColor.r)
+        0     sum += (targetColor.g - corpusColor.g)
+        0     sum += (targetColor.b - corpusColor.b)
+        - 
+        -     #println(sum)
+        -     #println(typeof(sum))
+        0     return sum
+        - end
+        - 
+        - 
+        - #=
+        - The maximum value of the metric.
+        - 
+        - The maximum value when one (target) value is zero and the other (corpus) value is
+        - the max value of the difference between values of a channel,
+        - summed over channels.
+        - =#
+        - 
+        - #=
+        - All types for channels of RGB
+        - are basically [0.0, 1.0] ????
+        - =#
+        - const maxPointDifference = 3 * 1.0

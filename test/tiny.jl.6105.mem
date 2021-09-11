@@ -1,0 +1,35 @@
+        - #=
+        - 
+        - A call to Resynthesizer using tiny image.
+        - 
+        - For testing mallocs.
+        - 
+        - 
+        - Usage:
+        - 
+        - >julia
+        - julia> include("tiny.jl")
+        - julia> @time test(img, mask)
+        - 
+        - OR
+        - 
+        - >julia --track-allocation=user
+        - and the usual process for analyzing mallocs
+        - =#
+        - 
+        - # For "load" local  files
+        - using FileIO
+        - # The tested item
+        - include("../src/resynthesizer.jl")
+        - 
+        - # mock test data
+        - # global so it persists and out of the test
+        0 img = load("/home/bootch/git/resynthesizerJulia/test/data/tinylighthouse.png")
+        - # small mask
+        0 mask = falses(size(img))
+        0 mask[3:4, 2:3] .= true
+        - 
+        - function test(img, mask)
+        0     # test the item
+        0     resynthesize(img, mask)
+        - end

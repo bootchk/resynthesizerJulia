@@ -1,0 +1,18 @@
+A metric returns a scalar measure between two values.
+
+The algorithms above a metric are generic on the types of values.
+
+Metrics are usually NOT generic, but rather specialized on, the types of values.
+
+Generic metrics might exist or be trivial to implement.
+For example, if the values are scalars, then subtraction is a trivial metric.
+
+IOW, the flow of types starts when you decide what values (e.g. Colors)
+and containers of values (e.g. Images)
+that you want to use.
+Then you must decide whether a metric for those values exists,
+and possibly implement a new metric for that type.
+
+For example, suppose the use case is images of colors.
+There exists a metric Colors.colordiff().
+(But it doesn't seem to be performant.)
