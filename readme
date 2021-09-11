@@ -11,7 +11,9 @@ Minimal changes to the algorithm, but significant refactoring.
 !!! Work in progress !!!
 The current status is that the "heal selection" feature *might* work in 2D like the original.
 Currently struggling with performance and fidelity with the original.
-Much cruft i.e. files that are not used or not correct.
+
+I'm just learning Julia.
+There is much cruft: files and code that are not used or not correct.
 
 The goals:
   - just as fast as the C version
