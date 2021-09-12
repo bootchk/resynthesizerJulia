@@ -1,6 +1,4 @@
 
-JuliaResynthesizer
-
 The "Resynthesizer" algorithm for texture transfer in images.
 An "inpainting" algorithm, among other things.
 

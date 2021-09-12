@@ -1,20 +1,21 @@
 #=
 
-A call to Resynthesizer using tiny image.
+A call to Resynthesizer using medium data:
+large image and medium mask.
 
 For testing mallocs.
 
 Usage:
 
 >julia
-julia> include("tiny.jl")
+julia> include("medium.jl")
 julia> @time test(img, mask)
 
 OR
 
 >julia --track-allocation=user
 and the usual process for analyzing mallocs...
-julia> include("tiny.jl")
+julia> include("medium.jl")
 julia> test(img, mask)
 julia>using Profile
 julia>Profile.clear_malloc_data()
@@ -28,10 +29,11 @@ include("../src/resynthesizer.jl")
 
 # mock test data
 # global so it persists and out of the test
-img = load("/home/bootch/git/resynthesizerJulia/test/data/tinylighthouse.png")
-# small mask
+img = load("/home/bootch/git/resynthesizerJulia/test/data/lighthouse.png")
+# medium mask
 mask = falses(size(img))
-mask[3:4, 2:3] .= true
+# 10x20 mask
+mask[50:60,300:320] .= true
 
 function test(img, mask)
     # test resynthesizer

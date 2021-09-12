@@ -75,17 +75,28 @@ function SortedOffsets(
     # return createMockSortedOffsets()
 
     offsets = createOffsets(tensor)
+    println(typeof(offsets))
 
     #=
     sort() alone would sort on y, then x
     Instead sort by manhattan AKA cityblock distance
+
+    sort! sorts in place (but with no fewer allocations?)
+
+    Minimizing allocations is not important
+    because this is only called once.
     =#
-    sortedOffsets = sort(offsets, by=cityBlockDistance)
+    sortedOffsets = sort!(offsets, by=cityBlockDistance)
+    println(typeof(sortedOffsets))
+    println(size(sortedOffsets))
 
-    # Elide the first element which is CartesianIndex(0,0)
-    notused =  popfirst!(sortedOffsets)
+    # Elide and discard the first element which is CartesianIndex(0,0)
+    # TODO ??? allocation here, 25M for medium data
+    # Don't use popfirst, we don't need the popped item
+    deleteat!(sortedOffsets, 1)
+    println(size(sortedOffsets))
 
-    # call default constructor
+    # call default constructor to encapsulate vector in a struct
     return SortedOffsets(sortedOffsets)
 end
 
@@ -119,7 +130,7 @@ Fails because iteration is unsupported for CartesianIndex
 
 Alternatively using Distances pkg.
 =#
-function cityBlockDistance(coordinates)
+function cityBlockDistance(coordinates) # ::CartesianIndex{DimensionCount})
     return norm(Tuple(coordinates), 1)
 end
 
