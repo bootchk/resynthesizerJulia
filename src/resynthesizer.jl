@@ -150,8 +150,11 @@ function resynthesize(
     # uninitialized mutable struct
     synthPatch = ScatterPatch(targetImage)
 
-    # initialize fundamental result
+    # initial fundamental, overall result
     synthResult = initialSynthResult(targetImage)
+
+    # Initial, singleton searchResult, allocated once and reused by passes
+    searchResult = SearchResult()
 
     # offsets to span the array of the targetImage
     sortedOffsets = SortedOffsets(targetImage.image)
@@ -167,7 +170,7 @@ function resynthesize(
     # The algorithm does not require this.
     nullifyMaskedRegion(targetImage, nullValue())
 
-    makePassesUntilGoodEnough(targetImage, corpusImage, synthPatch, synthResult, sortedOffsets)
+    makePassesUntilGoodEnough(targetImage, corpusImage, synthPatch, synthResult, searchResult, sortedOffsets)
     # assert targetImage is mutated and synthResult is mutated
 
     # The result is the mutated original (sans mask)

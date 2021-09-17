@@ -9,13 +9,18 @@ This is a heuristic: good matches are likely near the previous best matching cor
 Neighbor's are used here for a different purpose
 than when comparing patches (when we also iterate over neighbors.)
 =#
-function matchPatchesAtHeuristicCorpusPoints(synthPatch, targetImage, corpusImage, bestKnownPatchDiff, synthResult)
+function matchPatchesAtHeuristicCorpusPoints(synthPatch, targetImage, corpusImage, bestKnownPatchDiff, synthResult,
+        searchResult    # result to be mutated by the search
+        )
 
     # To test without heuristic search, return an faked result
     # return SearchResult(bestKnownPatchDiff)
 
-    # result to be mutated by the search loop
-    result = SearchResult(bestKnownPatchDiff)
+
+    # OLD result = SearchResult(bestKnownPatchDiff)
+    # OLD setStartingSearchResult(searchResult, bestKnownPatchDiff)
+
+    # assert searchResult is set to prior best result
 
     for neighbor in synthPatch.neighbors
         if isInSynthAndWasSynthesized(
@@ -51,17 +56,14 @@ function matchPatchesAtHeuristicCorpusPoints(synthPatch, targetImage, corpusImag
                     targetImage, corpusImage,
                     wildIndex,    # framed point
                     synthPatch,
-                    result.bestProbeResult.patchDifference  # patch diff to beat
+                    searchResult.bestProbeResult.patchDifference  # patch diff to beat
                     )
 
                 if probeResult.betterment != NotBetter
                     # Better or equal to any point probed in this search and in this pass
                     # TODO an assertion to prove it
-                    result.bestMatchPointInCorpus = wildIndex
-                    # Any further searching must best this latest probeResult
-                    result.bestProbeResult = probeResult
-
-                    @debug  "Better heuristic match" result
+                    setBetterSearchResult(searchResult, probeResult, wildIndex)
+                    @debug  "Better heuristic match" searchResult
 
                     # Is better, might be perfect
                     if probeResult.betterment == PerfectMatch
@@ -73,8 +75,8 @@ function matchPatchesAtHeuristicCorpusPoints(synthPatch, targetImage, corpusImag
         end
     end
 
-    @debug  "Heuristic search result" result
-    return result
+    @debug  "Heuristic search result" searchResult
+    return searchResult
 end
 
 

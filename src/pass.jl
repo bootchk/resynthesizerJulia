@@ -1,6 +1,7 @@
 
 
 include("patchMatchSearch.jl")
+include("result/searchResult.jl")
 
 #=
 A pass that searches.
@@ -15,7 +16,7 @@ TODO use the same wording "Original name"
 AKA synthesize()
 =#
 
-function makeAPass(targetImage, corpusImage, targetPoints, synthPatch, synthResult, sortedOffsets)::Int64
+function makeAPass(targetImage, corpusImage, targetPoints, synthPatch, synthResult, searchResult, sortedOffsets)::Int64
     #=
     Retry a target point even if a perfect match was found on prior pass
     since its patch might have changed.
@@ -48,12 +49,21 @@ function makeAPass(targetImage, corpusImage, targetPoints, synthPatch, synthResu
             sortedOffsets)
         # TODO pass patchSize to the search, and limit iteration over patch
 
+        #=
+        Set searchResult to the starting value of (NotBetter, Inf)
+        We can't use diff for this targetpoint from prior passes,
+        since, as discussed below, the patch changes.
+        A diff is for a patch, not a point.
+        =#
+        setStartSearchResult(searchResult, ProbeResult())
+
         # !!! side effects on targetImage, and synthResult
         searchResult = searchForPatchMatches(
             synthPatch,
             targetImage, synthPatchCenterPoint, # framed point
             corpusImage,
-            synthResult)
+            synthResult,
+            searchResult)
 
         if searchResult.bestProbeResult.betterment != NotBetter
             # TODO this is too crude, for equal to the old result ??
@@ -73,7 +83,10 @@ function makeAPass(targetImage, corpusImage, targetPoints, synthPatch, synthResu
 
             #=
             All we save from the searchResult is bestMatchPointInCorpus.
-            Not save the diff, since patch may change.
+            !!! Not save the diff, since patch may change.
+            That is, the existing diff for this point was for a patch that is now different
+            because the neighbors changed.
+
             !!! This also records the boolean event that we synthesized targetPoint,
             so we now know its value (e.g. color or best matching color)
             even if we did not actually replace the value in the target.

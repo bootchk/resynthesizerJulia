@@ -6,12 +6,15 @@ Should be kept very similar to heuristicPatchMatch
 TODO refactor so common code is in one place
 =#
 function matchPatchesAtRandomCorpusPoints(
-    synthPatch,
-    targetImage, corpusImage,
-    bestKnownPatchDiff, synthResult)
+    synthPatch,  # const IN
+    targetImage, # mutable, IN and OUT
+    corpusImage, # const IN
+    bestKnownPatchDiff, # IN
+    synthResult,    # mutable, OUT
+    searchResult    # mutable, IN/OUT to be mutated by the search
+    )
 
-    # result to be mutated by the search loop
-    result = SearchResult(bestKnownPatchDiff)
+    # OLD setStartingSearchResult(searchResult, bestKnownPatchDiff)
     #@debug  "Random search diff to beat %f\n" result.bestProbeResult.patchDifference
 
     for i = 1:parameters.maxProbeCount
@@ -21,15 +24,16 @@ function matchPatchesAtRandomCorpusPoints(
             targetImage, corpusImage,
             corpusPatchCenterPoint,
             synthPatch,
-            result.bestProbeResult.patchDifference)
+            searchResult.bestProbeResult.patchDifference)
 
         if probeResult.betterment != NotBetter
             # Better or equal to any point probed in this pass
 
+            # TODO a method of SearchResult
             # Lift the probeResult into the searchResult
-            result.bestMatchPointInCorpus = corpusPatchCenterPoint
+            searchResult.bestMatchPointInCorpus = corpusPatchCenterPoint
             # Any further searching must best this latest probeResult
-            result.bestProbeResult = probeResult
+            searchResult.bestProbeResult = probeResult
 
             @debug  "Better random match" result
 
@@ -41,6 +45,6 @@ function matchPatchesAtRandomCorpusPoints(
         end
     end
 
-    @debug  "Random search result " result
-    return result
+    @debug  "Random search result " searchResult
+    return searchResult
 end

@@ -67,6 +67,8 @@ end
 Outer constructor from a tensor.
 
 Create from SortedOffets from the tensor the offsets should span.
+
+Minimizing allocations is not too important because this is only called once.
 =#
 function SortedOffsets(
     tensor::Array{ValueType, DimensionCount}
@@ -82,18 +84,28 @@ function SortedOffsets(
     Instead sort by manhattan AKA cityblock distance
 
     sort! sorts in place (but with no fewer allocations?)
-
-    Minimizing allocations is not important
-    because this is only called once.
     =#
     sortedOffsets = sort!(offsets, by=cityBlockDistance)
     println(typeof(sortedOffsets))
     println(size(sortedOffsets))
 
-    # Elide and discard the first element which is CartesianIndex(0,0)
-    # TODO ??? allocation here, 25M for medium data
-    # Don't use popfirst, we don't need the popped item
+    # Exclude the first element which is CartesianIndex(0,0)
+
+    #=
+    Strategies:
+
+    pop() or deleteat() does 25M allocations for medium data
     deleteat!(sortedOffsets, 1)
+
+    Slice is performant.  It creates a view, or a copy?
+    =#
+    # This still does many allocations??? TODO
+    sortedOffsets = sortedOffsets[2:end]
+
+    # FAIL, no signature for SubArray
+    # sortedOffsets = @view sortedOffsets[2:end]
+
+    # Assert size is one less than before
     println(size(sortedOffsets))
 
     # call default constructor to encapsulate vector in a struct
@@ -107,9 +119,13 @@ Offsets are signed and include zero [-x,...,0,...,x]
 =#
 
 #=
-Specialized for 2D
+Create a vector of all the arrows to span a tensor.
 
-# TODO more generally for multidimension
+Another strategy would be to generate all words of (-1,1) of length k,
+then multiply by CartesianIndices of the tensor, shifted by substracting 1.
+
+Specialized for 2D
+TODO more generally for multidimension
 =#
 function  createOffsets(tensor)::Vector{CartesianIndex{2}}
 

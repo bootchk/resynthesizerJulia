@@ -25,6 +25,7 @@ function makePassesUntilGoodEnough(
         corpusImage,
         synthPatch,
         synthResult,
+        searchResult,
         sortedOffsets
         ) where{ValueType, DimensionCount}
     for i = 1:6  # MAX_PASSES, hardcoded here and in the original code
@@ -46,6 +47,7 @@ function makePassesUntilGoodEnough(
             targetPoints,
             synthPatch,
             synthResult,
+            searchResult,
             sortedOffsets)
 
         #=

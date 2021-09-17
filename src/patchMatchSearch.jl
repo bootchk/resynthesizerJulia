@@ -14,7 +14,7 @@ include("randomPatchMatch.jl")
 Search for a better match in corpus for a target point.
 Better than known match (from prior passes.)
 
-This understands that has two, sequential phases: "by heuristic", and "at random".
+This understands that a search has two, sequential phases: "by heuristic", and "at random".
 
 The "by heuristic" phase looks at places near where previous best matches were found.
 
@@ -25,6 +25,13 @@ looks at novel places that we might not have tried before.
 
 The result of the overall search is the cumulutive result of both phases.
 =#
+
+
+#=
+OLD
+When I assumed that a SearchResult would be returned on the stack.
+Instead, it seems to be allocated on the heap.
+
 function searchForPatchMatches(
         synthPatch,
         targetImage::MaskedImage{ValueType, DimensionCount},
@@ -38,7 +45,7 @@ function searchForPatchMatches(
     firstPhaseSearchResult = matchPatchesAtHeuristicCorpusPoints(
         synthPatch,
         targetImage, corpusImage,
-        patchDiffToBeat, synthResult )
+        patchDiffToBeat, synthResult, searchResult)
 
     # If already a perfectMatch, skip second phase (random search)
     if firstPhaseSearchResult.bestProbeResult.betterment != PerfectMatch
@@ -50,7 +57,7 @@ function searchForPatchMatches(
         secondPhaseSearchResult = matchPatchesAtRandomCorpusPoints(
             synthPatch,
             targetImage, corpusImage,
-            patchDiffToBeat, synthResult)
+            patchDiffToBeat, synthResult, searchResult)
 
         #=
         If second phase better, overall result is that result, else first phase result.
@@ -69,6 +76,43 @@ function searchForPatchMatches(
     return overallResult
 end
 
+=#
+
+
+function searchForPatchMatches(
+        synthPatch,
+        targetImage::MaskedImage{ValueType, DimensionCount},
+        synthPatchCenterPoint, # framed point
+        corpusImage,
+        synthResult,
+        searchResult,
+        )::SearchResult{DimensionCount} where {ValueType, DimensionCount}
+
+    patchDiffToBeat = startingPatchDiff(synthPatchCenterPoint)
+
+    matchPatchesAtHeuristicCorpusPoints(
+        synthPatch,
+        targetImage, corpusImage,
+        patchDiffToBeat, synthResult, searchResult)
+
+    # If already a perfectMatch, skip second phase (random search)
+    if searchResult.bestProbeResult.betterment != PerfectMatch
+        # Continue second phase of search
+
+        # Any further searching must best the first phase or the starting result
+        patchDiffToBeat = searchResult.bestProbeResult.patchDifference
+
+        secondPhaseSearchResult = matchPatchesAtRandomCorpusPoints(
+            synthPatch,
+            targetImage, corpusImage,
+            patchDiffToBeat, synthResult, searchResult)
+    else
+        @debug "Skipping random search phase since perfect match"
+    end
+    @debug  "Overall search result" searchResult
+
+    return searchResult
+end
 
 
 
