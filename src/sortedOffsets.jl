@@ -122,22 +122,55 @@ Offsets are signed and include zero [-x,...,0,...,x]
 #=
 Create a vector of all the arrows to span a tensor.
 
+The strategy is to generate a large array (four times larger than tensor)
+of CartesianIndex of suitable ranges (negative:positve), then convert
+to a Vector.
+
 Another strategy would be to generate all words of (-1,1) of length k,
 then multiply by CartesianIndices of the tensor, shifted by substracting 1.
 
 Specialized for 2D
 TODO more generally for multidimension
 =#
-function  createOffsets(tensor)::Vector{CartesianIndex{2}}
+function createOffsets(
+                tensor::Array{ValueType, DimensionCount}
+            )::Vector{CartesianIndex{DimensionCount}}  where{ValueType, DimensionCount}
 
     sizeVec = size(tensor)
-    # sizeVec is a vector, one element per dimension, giving size on an axis
+    # sizeVec is a tuple, one element per dimension, giving size on an axis
 
-    rawArray = [ CartesianIndex(x,y) for x = -sizeVec[1]:sizeVec[1], y = -sizeVec[2]:sizeVec[2]  ]
+    #=
+    Create array of CartesianIndex{DimensionCount}
+    where elements are indices in range -size:size
+
+    Since in all generality, there are infinite sizeVec's (for DimensionCount in range 1:Inf)
+    we could use @generated function,
+    Or use runtime determined
+    =#
+    rawArray = createArrayofSpanningIndex(sizeVec)
+
     rawVector = vec(rawArray)   # reshape from array to vector
     # !!! Contains (0,0) still
     return rawVector
 end
+
+
+function createArrayofSpanningIndex(sizeVec)
+    #=
+    Runtime dispatch.
+    Performance is not an issue, we only do this once.
+    But it is not fully general for all inputs to algorithm beyond dimension coded here.
+    =#
+    # Using comprehension
+    countDimensions = length(sizeVec)
+    if countDimensions == 1
+        return [ CartesianIndex(x) for x = -sizeVec[1]:sizeVec[1] ]
+    elseif countDimensions == 2
+        return [ CartesianIndex(x,y) for x = -sizeVec[1]:sizeVec[1], y = -sizeVec[2]:sizeVec[2]  ]
+    end
+end
+
+
 
 
 #=

@@ -1,9 +1,13 @@
 
 #=
-Types and methods for images.
+Types and methods for tensors (multidimension array).
+
+It is cruft if it says "image" instead of "tensor"
 =#
 
-using Colors
+include("null.jl")
+
+
 
 #=
 A tensor (usually 2D image) and same length mask.
@@ -87,28 +91,22 @@ function generateRandomMaskedPoint(maskedImage)
 end
 
 #=
-Set null value to elements of masked region.
+Set elements of masked region to a null value
+
+Re the algorithm, calling this is not necessary,
+but aids in debugging (so you can see in the result what might be wrong.)
 
 Typically typeof(value) is  RGB
 =#
-function nullifyMaskedRegion(maskedImage, nullValue)
-    # Require nullValue to be same type as element of Array
-    @assert typeof(nullValue) == typeof(maskedImage.image[1,1])
+function nullifyMaskedRegion(maskedImage)
+
+    nullValue = nullElementForTensor(maskedImage.image)
 
     # broadcasting using a logical mask as index
     maskedImage.image[maskedImage.mask] .= nullValue
 end
 
-#=
-Return the null value for an image.
 
-TODO when the thing is not an image
-=#
-function nullValue()
-    # Use black, not sure there is a null Color.
-    return colorant"black"
-    #Fail: RGB(Colors.color_names["black"])
-end
 
 
 #=

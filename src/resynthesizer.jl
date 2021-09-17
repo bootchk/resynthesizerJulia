@@ -165,10 +165,12 @@ function resynthesize(
     @assert isconcretetype(typeof(synthResult))
     @assert isconcretetype(typeof(sortedOffsets))
 
-    # Nullify the synth.
-    # For visual debugging when images, when animated, or at the end too much black is bad.
-    # The algorithm does not require this.
-    nullifyMaskedRegion(targetImage, nullValue())
+    #=
+    Nullify the synth.
+    For visual debugging when images, when animated, or at the end too much black is bad.
+    The algorithm does not require this.
+    =#
+    nullifyMaskedRegion(targetImage)
 
     makePassesUntilGoodEnough(targetImage, corpusImage, synthPatch, synthResult, searchResult, sortedOffsets)
     # assert targetImage is mutated and synthResult is mutated

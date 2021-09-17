@@ -26,6 +26,10 @@ Copyright 2021 Lloyd Konneker
 Original algorithm by Paul Harrison.
 
 
+Resynthesizer is fundamentally a search algorithm.
+Specifically, a search for a best match, not an exact match.
+And a search using a context: not search for an element, but patches around an element.
+This project thus aims to be a very generalized search algorithm.
 
 Basic testing instructions, starting from scratch
 

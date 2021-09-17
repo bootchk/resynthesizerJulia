@@ -3,6 +3,7 @@ using Printf
 using Random
 
 include("pass.jl")
+include("synthPoints.jl")
 
 #=
 Make passes over image.
@@ -60,39 +61,4 @@ function makePassesUntilGoodEnough(
         end
         @debug  "Pass $(i) found $(countBetterPixels) betters."
    end
-end
-
-
-
-
-#=
-Return vector of points to be synthesized.
-Those points that are masked.
-Points in frame of the target image.
-Ordered in scan order (i.e. whatever order findall() creates)
-
-findall returns a vector of indices, not the elements i.e. not a Bool.
-=#
-function generateSynthPoints(
-        target::MaskedImage{ValueType, DimensionCount}
-        )::Vector{CartesianIndex{DimensionCount}} where{ValueType, DimensionCount}
-    return findall(target.mask)
-end
-
-
-#=
-Return vector of points to be synthesized.
-Those points that are masked.
-Points in frame of the target image.
-Ordered by the optional ordering function, else the default: shuffled.
-
-The order causes a "direction" of synthesis, e.g. brushfire from a boundary.
-Random is a reasonable default.
-Scan order (across, then down or vice versa) usually bad.
-Other orders, say brushfire inwards, often give better results.
-=#
-function generateOrderedSynthPoints(
-        target::MaskedImage{ValueType, DimensionCount}
-        )::Vector{CartesianIndex{DimensionCount}} where{ValueType, DimensionCount}
-    return shuffle(generateSynthPoints(target));
 end

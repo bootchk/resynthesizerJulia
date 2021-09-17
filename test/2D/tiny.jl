@@ -24,7 +24,7 @@ julia> test(img, mask)
 # For "load" local  files
 using FileIO
 # The tested item
-include("../src/resynthesizer.jl")
+include("../../src/resynthesizer.jl")
 
 # mock test data
 # global so it persists and out of the test
