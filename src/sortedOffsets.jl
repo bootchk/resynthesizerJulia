@@ -100,7 +100,8 @@ function SortedOffsets(
     Slice is performant.  It creates a view, or a copy?
     =#
     # This still does many allocations??? TODO
-    sortedOffsets = sortedOffsets[2:end]
+    # TEMP testing allocs when this is omitted
+    # sortedOffsets = sortedOffsets[2:end]
 
     # FAIL, no signature for SubArray
     # sortedOffsets = @view sortedOffsets[2:end]

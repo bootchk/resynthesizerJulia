@@ -60,6 +60,8 @@ Return the initial SynthResult
 
 No points in the synth region have been synthesized.
 The coordinates of the best match for points in the synth region is unknown.
+
+In original C, prepare_target_sources()
 =#
 function initialSynthResult(targetImage::MaskedImage)
     println("SynthResult initializer called")
@@ -126,6 +128,15 @@ Is the targetPoint in the synth region (not the context)
 AND has been synthesized (has a best match in the corpus.)
 
 In original C code: has_source_neighbor()
+
+!!! This is not the original implementation.
+The original relies on sourceOf field of Neighbor,
+i.e. on caching SynthResult.mapFromTargetToCorpusPoints[targetIndex] in the Neighbor.
+Which probably gives better cpu cache coherence.
+Since the implementation below:
+1) accesses the original mask
+2) accesses an inverted copy of the mask (SynthResult.hasValue)
+both of which are large and both might not fit in the cpu cache.
 =#
 function isInSynthAndWasSynthesized(
         synthResult,

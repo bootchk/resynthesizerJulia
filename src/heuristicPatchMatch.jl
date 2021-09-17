@@ -45,13 +45,12 @@ function matchPatchesAtHeuristicCorpusPoints(synthPatch, targetImage, corpusImag
                 continue
             else
                 #=
-                wildindex is not wild anymore.
+                wildindex is now not wild, i.e. is in bounds of the corpusImage
                 The role is now: corpusPatchOriginPoint
                 Don't give it an alias since that has performance issue, unless declared const !!
                 =#
 
                 # Same code as in phase 2
-                # WAS patchDiffToBeat
                 probeResult = patchMatch(
                     targetImage, corpusImage,
                     wildIndex,    # framed point
@@ -67,7 +66,7 @@ function matchPatchesAtHeuristicCorpusPoints(synthPatch, targetImage, corpusImag
 
                     # Is better, might be perfect
                     if probeResult.betterment == PerfectMatch
-                        @debug "Perfect match"
+                        @debug "Perfect heuristic match"
                         break
                     end
                 end
