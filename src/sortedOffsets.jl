@@ -139,14 +139,6 @@ function createOffsets(
     sizeVec = size(tensor)
     # sizeVec is a tuple, one element per dimension, giving size on an axis
 
-    #=
-    Create array of CartesianIndex{DimensionCount}
-    where elements are indices in range -size:size
-
-    Since in all generality, there are infinite sizeVec's (for DimensionCount in range 1:Inf)
-    we could use @generated function,
-    Or use runtime determined
-    =#
     rawArray = createArrayofSpanningIndex(sizeVec)
 
     rawVector = vec(rawArray)   # reshape from array to vector
@@ -155,6 +147,14 @@ function createOffsets(
 end
 
 
+#=
+Create array of CartesianIndex{DimensionCount}
+where elements are indices in range -size:size
+
+Since in all generality, there are infinite sizeVec's (for DimensionCount in range 1:Inf)
+we could use @generated function,
+Or use runtime determined
+=#
 function createArrayofSpanningIndex(sizeVec)
     #=
     Runtime dispatch.
@@ -167,6 +167,12 @@ function createArrayofSpanningIndex(sizeVec)
         return [ CartesianIndex(x) for x = -sizeVec[1]:sizeVec[1] ]
     elseif countDimensions == 2
         return [ CartesianIndex(x,y) for x = -sizeVec[1]:sizeVec[1], y = -sizeVec[2]:sizeVec[2]  ]
+    elseif countDimensions == 3
+        return [ CartesianIndex(x,y,z) for  x = -sizeVec[1]:sizeVec[1],
+                                            y = -sizeVec[2]:sizeVec[2],
+                                            z = -sizeVec[3]:sizeVec[3]  ]
+    else
+        throw(ErrorException("Unhandled dimension > 3"))
     end
 end
 

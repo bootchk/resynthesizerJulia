@@ -31,9 +31,13 @@ function matchPatchesAtRandomCorpusPoints(
 
             # TODO a method of SearchResult
             # Lift the probeResult into the searchResult
+            setBetterSearchResult(searchResult, probeResult, corpusPatchCenterPoint)
+            #=
+            OLD
             searchResult.bestMatchPointInCorpus = corpusPatchCenterPoint
             # Any further searching must best this latest probeResult
             searchResult.bestProbeResult = probeResult
+            =#
 
             @debug  "Better random match" result
 

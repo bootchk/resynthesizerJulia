@@ -8,17 +8,17 @@ Usage:
 
 >julia
 julia> include("tiny.jl")
-julia> @time test(img, mask)
+julia> @time test(image, mask)
 
 OR
 
 >julia --track-allocation=user
 and the usual process for analyzing mallocs...
 julia> include("tiny.jl")
-julia> test(img, mask)
+julia> test(image, mask)
 julia>using Profile
 julia>Profile.clear_malloc_data()
-julia> test(img, mask)
+julia> test(image, mask)
 =#
 
 # For "load" local  files
@@ -28,12 +28,12 @@ include("../../src/resynthesizer.jl")
 
 # mock test data
 # global so it persists and out of the test
-img = load("/home/bootch/git/resynthesizerJulia/test/data/tinylighthouse.png")
+image = load("/home/bootch/git/resynthesizerJulia/test/data/tinylighthouse.png")
 # small mask
-mask = falses(size(img))
+mask = falses(size(image))
 mask[3:4, 2:3] .= true
 
-function test(img, mask)
+function test(image, mask)
     # test resynthesizer
-    resynthesize(img, mask)
+    resynthesize(image, mask)
 end

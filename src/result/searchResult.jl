@@ -1,5 +1,6 @@
 
 include("probeResult.jl")
+include("../null.jl")
 
 #=
 Result of a searching function for best matching patch for a given target point.
@@ -31,11 +32,18 @@ Constructor for initial/empty/null result
 Only called once.
 
 Sets both fields to start condition.
+
+General on DimensionCount, taken from the passed tensor.
 =#
-function SearchResult()
-    # point is out of range for Array, whose usual index starts at 1
-    # TODO generalize for MDA
-    return SearchResult(ProbeResult(), CartesianIndex(-1,-1))   # TODO missing?
+function SearchResult(tensor)
+    #=
+    Here we are initializing to the least index.
+    TODO better if point is out of range for Array (whose usual index base is 1
+    =#
+    #OLD not general on DimensionCount
+    # return SearchResult(ProbeResult(), CartesianIndex(-1,-1))   # TODO missing?
+
+    return SearchResult(ProbeResult(), leastIndex(tensor))
 end
 
 #=

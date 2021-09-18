@@ -29,9 +29,8 @@ mask = falses(size(text))
 mask[3:4, 2:3] .= true
 
 
-function test(img, mask)
-    # test resynthesizer
-    result = resynthesize(img, mask)
+function test(data, mask)
+    result = resynthesize(data, mask)
 
     # Assert result is Array(UInt8)
 

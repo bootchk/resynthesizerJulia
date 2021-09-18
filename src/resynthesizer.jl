@@ -154,7 +154,7 @@ function resynthesize(
     synthResult = initialSynthResult(targetImage)
 
     # Initial, singleton searchResult, allocated once and reused by passes
-    searchResult = SearchResult()
+    searchResult = SearchResult(targetImage.image)
 
     # offsets to span the array of the targetImage
     sortedOffsets = SortedOffsets(targetImage.image)
@@ -166,7 +166,7 @@ function resynthesize(
     @assert isconcretetype(typeof(sortedOffsets))
 
     #=
-    Nullify the synth.
+    Nullify the synth region.
     For visual debugging when images, when animated, or at the end too much black is bad.
     The algorithm does not require this.
     =#

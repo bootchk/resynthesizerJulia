@@ -1,6 +1,6 @@
 A metric returns a scalar measure between two values.
 
-The algorithms above a metric are generic on the types of values.
+The algorithms that call a metric are generic on the types of values.
 
 Metrics are usually NOT generic, but rather specialized on, the types of values.
 

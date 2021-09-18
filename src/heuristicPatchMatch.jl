@@ -100,6 +100,8 @@ function wildRelatedCorpusIndex(neighbor, synthResult)::CartesianIndex
     !!! Subtraction reverses the direction of the offset.
     =#
     bestMatchingCorpusIndex = synthResult.mapFromTargetToCorpusPoints[neighbor.targetPoint]
+
+    # TODO move to offset.jl  pointAtInverseOffset
     # @assert typeof(bestMatchingCorpusIndex) <: CartesianIndex
     wildCorpusIndex = bestMatchingCorpusIndex - neighbor.offset
     # println(typeof(wildCorpusIndex))

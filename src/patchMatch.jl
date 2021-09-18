@@ -1,5 +1,6 @@
 
 include("pointCompare.jl")
+include("offset.jl")
 
 #=
 Match a patch.
@@ -15,8 +16,10 @@ This understands:
 Formerly known as computeBestFit()
 =#
 function patchMatch(
-    targetImage::MaskedImage{ValueType, DimensionCount}, corpusImage::MaskedImage{ValueType, DimensionCount},
-    corpusPatchCenterPoint::CartesianIndex{DimensionCount},    # framed point
+    targetImage::MaskedImage{ValueType, DimensionCount},
+    corpusImage::MaskedImage{ValueType, DimensionCount},
+    corpusPatchCenterPoint::Int64,    # framed point, using linear indexing
+    # OLDCartesianIndex{DimensionCount}
     synthPatch::ScatterPatch{ValueType, DimensionCount},
     patchDiffToBeat::Float32   # For this target patch, but only while the target is unchanged
     )::ProbeResult where {ValueType, DimensionCount}
@@ -61,18 +64,12 @@ function patchMatch(
         patchPointCorpus.point =  foo
         =#
 
+        # OLD offset points directly
+        # patchPointCorpus = corpusPatchCenterPoint + neighbor.offset
         # NEW separate function to mutate
-        # offsetPatchPoint(patchPointCorpus, corpusPatchCenterPoint.point, patchPoint.offset)
+        patchPointCorpus = offsetPatchPoint(corpusImage.image, corpusPatchCenterPoint, neighbor.offset)
 
-        # NEW create a new immutable
-        #= OLD framed,
-        patchPointCorpus = PointInMaskedImage(
-            corpusPatchCenterPoint.point + patchPoint.offset,
-            corpusPatchCenterPoint.maskedImage )
-        =#
-        patchPointCorpus = corpusPatchCenterPoint + neighbor.offset
-        # is wild
-
+        # is wild, might be out of bounds
 
         # Difference of value of patchPoint (from the target) to value of corresponding point in corpus
         # TEMP test specialized calls
@@ -98,13 +95,3 @@ function patchMatch(
 
     return ProbeResult(betterment, differenceSum)
 end
-
-
-
-#=
-
-function offsetPatchPoint(
-    patchPoint::PointInMaskedImage, point::CartesianIndex, offset::CartesianIndex)
-    patchPoint.point = point + offset
-end
-=#

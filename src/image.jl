@@ -60,18 +60,45 @@ end
 
 #=
 Return CartesionIndex with each element a rand in range of indices of each dimension of array.
-Assert array is 2D, so dimension 1 and 2 e.g. width x height.
-More generally, iterate over dimensions of array.
 
-Here the image parameter is just passed through to function size().
-So Julia will not specialize, unless we parameterize the function declaration on N.
+General on N i.e. DimensionCount.
+We parameterize the function declaration on N.
+
+The returned value is a CartesianIndex, or for 1D a Int64??? TODO
+
 ??? Performance.
-
-But we also want general on N, with specialization????
 =#
-function generateRandomPoint(image::AbstractArray{T,N} where {T,N}) # ::CartesianIndex{N} # where {N}
-    return CartesianIndex( rand(1:size(image, 1)),
-                           rand(1:size(image, 2))  )
+function generateRandomPoint(tensor::AbstractArray{T,N} where {T,N}) # ::CartesianIndex{N} # where {N}
+    #= OLD, specific to 2D
+    return CartesianIndex( rand(1:size(tensor, 1)),
+                           rand(1:size(tensor, 2))  )
+    =#
+
+    #=
+    eachIndex is a generator of all indices for an Array.
+    See the documentation.
+    "For array types that have opted into fast linear indexing
+    (like Array), this is simply the range 1:length(A)"
+    i.e. a Int64.
+
+    Choose a random element of that set.
+    ??? Don't know if it is fast.
+    =#
+    linearIndex = rand(eachindex(tensor))
+
+    #=
+    Convert to CartesianIndex.
+
+    TODO as noted above, it might already be a CartesianIndex.
+
+    Recommended way to convert to a CartesianIndex is
+    CartesianIndices(tensor)[linearIndex]
+    But requires expensive division.
+    But we do that later.
+    =#
+    result = CartesianIndices(tensor)[linearIndex]
+
+    return result
 end
 
 
@@ -120,6 +147,8 @@ function isPointSelectedInMaskedImage(
     return maskedImage.mask[point]
 end
 
+
+# TODO Duplicate, move this to offset.jl
 #=
 Return point offset from a given point.
 Coordinate arithmetic.

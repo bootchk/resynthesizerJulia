@@ -59,7 +59,7 @@ end
 Outer constructor taking only targetImage.
 Creates more or less undefined Neighbor, subsequently mutated.
 
-The types must be correct, but the values are don't care: never read.
+The types must be correct, but the values are don't care: we write but never read.
 So we use the coordinates and values of the first index.
 =#
 
@@ -67,9 +67,9 @@ function Neighbor(targetImage::MaskedImage{ValueType, DimensionCount}) where {Va
     firstIndex = leastIndex(targetImage.image)
     # WAS: CartesianIndex(1,1) but that is specialized to 2D
     return Neighbor(
-        firstIndex,
-        firstIndex,
-        targetImage.image[firstIndex]
+        firstIndex, # point in target frame
+        firstIndex, # point in corpus frame ??? is leastIndex same for corpus?
+        targetImage.image[firstIndex]   # value
         )
 end
 
