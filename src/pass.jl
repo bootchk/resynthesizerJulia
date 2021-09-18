@@ -12,8 +12,7 @@ The only non side effect is the returned value.
 
 Return the count of better points that the pass found.
 
-TODO use the same wording "Original name"
-AKA synthesize()
+Original name in C: synthesize()
 =#
 
 function makeAPass(targetImage, corpusImage, targetPoints, synthPatch, synthResult, searchResult, sortedOffsets)::Int64

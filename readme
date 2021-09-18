@@ -31,6 +31,11 @@ Specifically, a search for a best match, not an exact match.
 And a search using a context: not search for an element, but patches around an element.
 This project thus aims to be a very generalized search algorithm.
 
+
+
+
+
+The rest of these are my notes for dev/test.
 Basic testing instructions, starting from scratch
 
 
@@ -44,6 +49,12 @@ pkg> activate test
 Run the file that contains the testset
 
 >julia --project=test test/resynthesizer.jl
+
+Or run a specific test program, with debugging:
+
+julia> ENV["JULIA_DEBUG"] = all
+julia> include("test/1D/tiny.jl")
+julia> test(text,mask)
 
 
 

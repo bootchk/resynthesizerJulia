@@ -12,6 +12,10 @@ That is, the coordinate system of an offset has as origin the distinguished poin
 Fields are parameterized concrete types.
 =#
 
+
+include("null.jl")  # leastIndex
+
+
 mutable struct Neighbor{ValueType, DimensionCount}
 
     #=
@@ -25,7 +29,7 @@ mutable struct Neighbor{ValueType, DimensionCount}
     Attributes for performance.
     1) attributes used many times computed once.
        Same targetPoint is used for many search probes over the corpus
-    2) Cache locality is improved if we precompute these attributes into one compact location
+    2) CPU cache coherence is improved if we precompute these attributes into one compact locality
 
     For example, the cache can hold the entire ScatterPatch,
     but might not hold the entire target image.
@@ -54,13 +58,18 @@ end
 #=
 Outer constructor taking only targetImage.
 Creates more or less undefined Neighbor, subsequently mutated.
+
+The types must be correct, but the values are don't care: never read.
+So we use the coordinates and values of the first index.
 =#
 
 function Neighbor(targetImage::MaskedImage{ValueType, DimensionCount}) where {ValueType, DimensionCount}
+    firstIndex = leastIndex(targetImage.image)
+    # WAS: CartesianIndex(1,1) but that is specialized to 2D
     return Neighbor(
-        CartesianIndex(1,1),
-        CartesianIndex(1,1),
-        targetImage.image[1,1]    # value
+        firstIndex,
+        firstIndex,
+        targetImage.image[firstIndex]
         )
 end
 

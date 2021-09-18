@@ -9,7 +9,11 @@ choose one.
 # include("colorMetric.jl")
 #include("pointDifference.jl")
 
+#=
+TODO do we need to include every possible metric?
+=#
 include("metric/distance.jl")
+include("metric/character/nieve.jl")
 
 
 #=
@@ -38,6 +42,7 @@ function comparePatchPoints(patchPointTarget, patchPointCorpus)
     # in bounds of the corpus (within the outer boundary)
     # and in the selected region of corpus (within interior boundaries so to speak)
     if isInBoundsAndSelected(patchPointCorpus)
+        # call the metric.  See metric/ dir
         result = pointDifference(
             patchPointTarget,
             patchPointCorpus)

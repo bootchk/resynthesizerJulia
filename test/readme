@@ -1,59 +1,18 @@
-Process for analyzing allocations
-=================================
 
-See https://github.com/JuliaCI/Coverage.jl
+Structure of this directory
+===========================
 
+A main goal is the algorithm generic on type and dimension of data.
 
-Using the @time macro in the REPL will print the count of allocations and count of bytes allocated.
-But you always need to run it twice, the first run describes the allocations of the compile phase.
+Thus the test programs are structured along dimensions, then data type.
 
-In the Julia REPL:
+1D/text  (e.g. stream of char.)
+2D/
+  image
+  text  (e.g. poetry or paginated text)
+3D/
+  image (e.g. video)
 
-include("test/tiny.jl")
-@time test(img, mask)
-@time test(img, mask)
+unit/    unit tests 
 
-This will load a tiny image and resynthesize it.
-Expect count of allocations in the hundreds, and count of bytes in the kilobytes.
-Allocations in the millions, and count of bytes near a billion,
-indicates improvements are needed in the type annotations
-(so that Julia does not allocate for Any types.)
-
-
-To know where allocations are deficient
-=======================================
-
-Start Julia with profiling:
-
->Julia
-
-Then run the test:
-
-include("test/tiny.jl")
-@time test(img, mask)
-using Profile
-Profile.clear_malloc_data()
-@time test(img, mask)
-
-Quit Julia (ctl-D) and  restart the REPL without profiling
-
-using Coverage
-analyze_malloc("src")
-
-That lists the lines of code and how many allocations they make.
-Concentrate on the last, the largest allocations.
-
-In the shell, clear the .mem files
-
-rm src/*.mem
-
-
-Work from tiny to large
-=======================
-
-Start with test/tiny.jl which uses small data.
-But it will not tell you which allocations are linear in size of data.
-So progress to test/medium.jl.
-Some allocations may increase into the millions,
-those are in the innermost loops,
-and increase with the size of the data.
+other miscellaneous files
