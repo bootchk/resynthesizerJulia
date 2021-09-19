@@ -96,8 +96,10 @@ using ColorTypes
     @test_reference outPath slice
 
 
+    # 3D color video (time lapsed 2D images)
+    # TODO
 
-    # 4D
+    # 4D e.g. time lapsed 3D images
     # TODO
 
 

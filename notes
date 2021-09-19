@@ -1,0 +1,56 @@
+Notes for dev/test.
+Basic testing instructions, starting from scratch
+
+
+Change directory to the local repository
+>cd resynthesizerJulia
+
+
+Run a file that contains a testset
+
+Test fidelity of the algorithm to the original, using 2D image
+>julia --project=test test/resynthesizer.jl
+
+Test over many dimensions and element types
+>julia --project=test test/dimensions.jl
+
+
+
+
+Run a specific test program in the REPL with debugging:
+
+julia> ENV["JULIA_DEBUG"] = all
+julia> include("test/1D/tiny.jl")
+julia> test(text,mask)
+
+
+
+
+???  Activate the test project from the REPL in pkg mode
+>julia
+julia>]
+pkg> activate test
+
+
+
+From the REPL
+
+Install julia
+
+Start REPL
+
+install packages,
+or use a package.toml ???
+(installs many supporting packages)
+
+>import Pkg; Pkg.add("ReferenceTests")
+>import Pkg; Pkg.add("TestImages")
+>import Pkg; Pkg.add("ImageMagick")
+>import Pkg; Pkg.add("ColorTypes")
+
+Import the test framework
+> using ReferenceTests
+(compiles a long time)
+
+Run the test suite by name
+@testset "Resynthesizer"
