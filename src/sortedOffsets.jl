@@ -164,6 +164,7 @@ function createArrayofSpanningIndex(sizeVec)
     # Using comprehension
     countDimensions = length(sizeVec)
     if countDimensions == 1
+        # TODO 1D indexes are Int64, not CartesianIndex{1}
         return [ CartesianIndex(x) for x = -sizeVec[1]:sizeVec[1] ]
     elseif countDimensions == 2
         return [ CartesianIndex(x,y) for x = -sizeVec[1]:sizeVec[1], y = -sizeVec[2]:sizeVec[2]  ]
@@ -171,8 +172,13 @@ function createArrayofSpanningIndex(sizeVec)
         return [ CartesianIndex(x,y,z) for  x = -sizeVec[1]:sizeVec[1],
                                             y = -sizeVec[2]:sizeVec[2],
                                             z = -sizeVec[3]:sizeVec[3]  ]
+    elseif countDimensions == 4
+        return [ CartesianIndex(x,y,z,u) for x = -sizeVec[1]:sizeVec[1],
+                                            y = -sizeVec[2]:sizeVec[2],
+                                            z = -sizeVec[3]:sizeVec[3],
+                                            u = -sizeVec[4]:sizeVec[4]  ]
     else
-        throw(ErrorException("Unhandled dimension > 3"))
+        throw(ErrorException("Unhandled dimension > 4"))
     end
 end
 
@@ -181,12 +187,16 @@ end
 
 #=
 Manhattan/taxicab/L1 distance of a vector is norm(vector,1) using LinearAlgebra pkg.
-Vector between two  points x, y is x-y
-Fails because iteration is unsupported for CartesianIndex
+The so-called 1-norm.  Here the literal 1 means the 1-norm.
+That is, the literal 1 is the value of the argument with keyword "p",
+i.e. this is from a family of norms called p-norms.
 
-Alternatively using Distances pkg.
+Result is a scalar.
+
+Alternatively use Distances pkg?
 =#
 function cityBlockDistance(coordinates) # ::CartesianIndex{DimensionCount})
+    # convert to Tuple because norm requires an iterable and CartsianIndex is not iterable?
     return norm(Tuple(coordinates), 1)
 end
 

@@ -61,8 +61,10 @@ function leastIndex(tensor)
         leastIndex = CartesianIndex(1,1)
     elseif dims == 3
         leastIndex = CartesianIndex(1,1,1)
+    elseif dims == 4
+        leastIndex = CartesianIndex(1,1,1,1)
     else
-        throw(ErrorException("Unhandled dimension > 3"))
+        throw(ErrorException("Unhandled dimension > 4"))
     end
 
     return leastIndex

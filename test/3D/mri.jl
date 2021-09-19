@@ -1,7 +1,5 @@
 #=
-
 Test resynthesizer in 3D using commonly available test data.
-
 =#
 
 # The tested item
@@ -13,6 +11,7 @@ using ImageView, Images
 
 # Grab the open source test data
 using TestImages
+# "mri" is short name
 fullImage = testimage("mri");
 
 println("fullImage is:")

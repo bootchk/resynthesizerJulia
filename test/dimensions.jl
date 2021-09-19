@@ -79,6 +79,8 @@ using ColorTypes
     # synthesize a small cube in the horizontal slices 5 and 6
     mask[3:4, 2:3, 5:6] .= true
 
+    out = resynthesize(data, mask)
+
     outPath = "data/out/mri"
     #=
     TODO this fails because test_reference fails to handle 3D???
@@ -87,7 +89,7 @@ using ColorTypes
 
     Consequently, we iteratively compare some slices of the image.
     =#
-    out = resynthesize(data, mask)
+
     # The first horizontal (superior axis) plane is at z=5
     slice = out[:,:,5]
     print(summary(slice))
@@ -96,11 +98,56 @@ using ColorTypes
     @test_reference outPath slice
 
 
+
     # 3D color video (time lapsed 2D images)
     # TODO
 
-    # 4D e.g. time lapsed 3D images
-    # TODO
 
 
+    # 4D e.g. time lapsed 3D images, or time lapses 2D images with explicit channels?
+    # copied from test/4D/multi.jl
+    # "multi" is short name
+    fullImage = testimage("multi");
+
+    println("fullImage is:")
+    println(summary(fullImage))
+    # 167×439×3×7
+
+    #=
+    See JuliaImages.
+    The image has named axes.
+    And metadata??
+    We only want to convert the data.
+    Extract: data(fullImage), not fullImage.data??
+    =#
+    imageWithAxes = data(fullImage)
+    imageView = imageWithAxes.data
+    #=
+    imageView is still reshape(reinterpret(...)) which throws type errors.
+    Its a view. So copy it.
+    =#
+    image = copy(imageView)
+
+    # Create mask
+    mask = falses(size(image))
+    # ??? The third dimension is 3 channels.  Arbitrarily take them all.
+    mask[3:4, 2:3, 1:3, 5:6] .= true
+
+    # test
+    out = resynthesize(data, mask)
+
+    outPath = "data/out/multi"
+    #=
+    test_reference fails to handle 3D, 4D ???
+    Consequently, we iteratively compare some slices of the image.
+    =#
+    println("typeof(out) is")
+    println(typeof(out))
+
+    # Don't care what this slice is, u=5
+    slice = out[:,:,:,5]
+    print(summary(slice))
+
+    # compare one slice to the reference
+    #@test_reference outPath slice
 end
