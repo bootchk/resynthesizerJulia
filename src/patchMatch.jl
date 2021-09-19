@@ -5,7 +5,8 @@ include("offset.jl")
 #=
 Match a patch.
 A probe of a search.
-The patch was built from the target, compare to given point in corpus.
+The patch was built from the target.
+Compare to patch around given point in corpus.
 
 Return ProbeResult
 
@@ -18,8 +19,8 @@ Formerly known as computeBestFit()
 function patchMatch(
     targetImage::MaskedImage{ValueType, DimensionCount},
     corpusImage::MaskedImage{ValueType, DimensionCount},
-    corpusPatchCenterPoint::Int64,    # framed point, using linear indexing
-    # OLDCartesianIndex{DimensionCount}
+    # corpusPatchCenterPoint::Int64,    # framed point, using linear indexing
+    corpusPatchCenterPoint::CartesianIndex{DimensionCount},
     synthPatch::ScatterPatch{ValueType, DimensionCount},
     patchDiffToBeat::Float32   # For this target patch, but only while the target is unchanged
     )::ProbeResult where {ValueType, DimensionCount}
