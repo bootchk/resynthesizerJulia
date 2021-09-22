@@ -8,9 +8,10 @@ if you also defined another metric having the same signature.
 =#
 
 
-# TEMP, to get types
-using Colors
+using Colors    # RGB
 
+# metric functions
+include("negLnCauchy.jl")
 
 #=
 Specialized for types from Colors module.
@@ -59,9 +60,13 @@ function pointDifference(
 
     # println(typeof(targetColor.r))
     # Use abs(), we want magnitude, not a signed difference
-    sum += abs(targetColor.r - corpusColor.r)
-    sum += abs(targetColor.g - corpusColor.g)
-    sum += abs(targetColor.b - corpusColor.b)
+    for value in (  targetColor.r - corpusColor.r,
+                    targetColor.g - corpusColor.g,
+                    targetColor.b - corpusColor.b,
+                    )
+        # sum += abs(value) # negLnCauchy(abs(value)
+        sum += negLnCauchy(abs(value))
+    end
 
     #println(sum)
     #println(typeof(sum))

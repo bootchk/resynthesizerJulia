@@ -115,3 +115,43 @@ From here...
 * restore performance
 * explore real applications in other dimensions
 * explore uses of a returned location of best matches (without replacement.)
+
+## Aspects of the algorithm important to its performance
+
+The algorithm uses various tricks or heuristics for performance.
+
+Note that some of the tricks from the original may not yet be in this implementation.
+
+This is not a complete discussion of all the tricks, just an overview of the most important tricks.
+
+The algorithm uses a variant of the Cauchy distribution to compute point differences.
+The original author discusses the importance.
+Using this function is one reason that inhibits SMD vectorization of the algorithm.
+
+The algorithm uses a heuristic to select points to sample in the search.
+This enhances performance.
+
+The algorithm uses two types of patch (a scatter patch and a dense, contiguous patch.)
+Thus the algorithm from the very first uses context to synthesize points.
+(Even though the context may be far away from the synthesized point.)
+Whereas some other algorithms use random samples to fill in the initial synthesized values.
+(The algorithm doesn't actually use two types.
+It just uses ScatterPatch, which generalizes the two types of patch,
+and after the first patch, a Scatter patch is dense and contiguous.)
+Using ScatterPatch is another reason that inhibits SMD vectorization of the algorithm.
+(The values in a ScatterPatch are not in consecutive locations of memory.)
+
+The algorithm uses structures that cache frequently used data.
+In other words, the algorithm is not a naive implementation from first principles,
+but organizes the original data into data structures
+that remain in the CPU caches with high probability.
+If computers did not have cached memory (or if all memory were as fast as the L1 cache)
+this would not be a concern.
+
+Some of the tricks are in the plugins that wrap the algorithm.
+For example, the plugins let a user choose a corpus that is near the synthesized region
+(e.g. a frisket/)
+If you don't do that, artifacts from far away in the corpus creep into the result.
+For another example, the plugins let the user choose an order of synthesis.
+If you don't do that, linear structures at the boundary of the synthesized region
+are not synthesized well.

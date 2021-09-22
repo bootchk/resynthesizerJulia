@@ -15,4 +15,16 @@ and possibly implement a new metric for that type.
 
 For example, suppose the use case is images of colors.
 There exists a metric Colors.colordiff().
-(But it doesn't seem to be performant.)
+(But it doesn't seem to perform well.)
+
+### Types of values
+
+The value may be a vector, e.g. a color is a vector of RGB channels.
+
+A difference (a positive magnitude) is calculated
+for each component of a value.
+
+A metric function may be applied to each difference.
+The original Resynthesizer algorithm applied
+a function proportional to negative natural log of the cauchy PDF
+(probability distribution function.)
