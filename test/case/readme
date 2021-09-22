@@ -1,0 +1,7 @@
+Test cases by image:
+
+- donkey  : easy, not linear objects
+- lighthouse : hard, linear objects at boundary
+
+Cases of varying difficulty because the task (the image/mask) depicts linear objects
+that are hard to synthesize.

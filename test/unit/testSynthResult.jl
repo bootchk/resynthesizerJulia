@@ -8,7 +8,7 @@ Of SynthResult
 # For "load" local  files
 using FileIO
 
-include("../src/synthResult.jl")
+include("../../src/result/synthResult.jl")
 
 
 #=
@@ -31,10 +31,12 @@ end
 
 # load an image
 
-img_path = "/home/bootch/git/resynthesizerJulia/test/data/tinylighthouse.png"
+img_path = "/home/bootch/git/resynthesizerJulia/test/data/in/tinylighthouse.png"
 img = load(img_path)
 
+println("type and length of image")
 println(typeof(img))
+println(length(img))
 
 # Need a mask to create MaskedImage
 # The mask selcts whole image

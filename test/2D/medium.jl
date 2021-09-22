@@ -25,11 +25,11 @@ julia> test(img, mask)
 # For "load" local  files
 using FileIO
 # The tested item
-include("../src/resynthesizer.jl")
+include("../../src/resynthesizer.jl")
 
 # mock test data
 # global so it persists and out of the test
-img = load("/home/bootch/git/resynthesizerJulia/test/data/lighthouse.png")
+img = load("/home/bootch/git/resynthesizerJulia/test/data/in/lighthouse.png")
 # medium mask
 mask = falses(size(img))
 # 10x20 mask

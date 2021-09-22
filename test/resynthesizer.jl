@@ -48,12 +48,12 @@ using ColorTypes
   if tiny
       # 8w x 5h
 
-      img_path = "/home/bootch/git/resynthesizerJulia/test/data/tinylighthouse.png"
+      img_path = "/home/bootch/git/resynthesizerJulia/test/data/in/tinylighthouse.png"
       img = load(img_path)
       mask = falses(size(img))
       mask[3:4, 2:3] .= true
   elseif donkey
-      img_path = "/home/bootch/git/resynthesizerJulia/test/data/donkey.png"
+      img_path = "/home/bootch/git/resynthesizerJulia/test/data/indonkey.png"
       img = load(img_path)
       mask = falses(size(img))
       # square mask of the donkey itself
@@ -86,5 +86,5 @@ using ColorTypes
   save(img_path, out)
 
   # Julia macro that compares file and expression
-  @test_reference "data/lighthouse.png" out
+  @test_reference "data/out/lighthouse.png" out
 end

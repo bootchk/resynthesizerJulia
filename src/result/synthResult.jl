@@ -40,6 +40,9 @@ i.e. an array that encloses the synthesized region of the target
 # Depends on image.jl because methods take instance of MaskedImage
 include("../image.jl")  # MaskedImage
 
+# OLD array of CartesianIndex
+# MapElementType =
+# MapElementType = Int64
 
 struct SynthResult{DimensionCount}
     #=
@@ -50,7 +53,13 @@ struct SynthResult{DimensionCount}
     NOT AbstractArray.
     Resynthesizer chooses an implementation.
     =#
+
+    # WAS
     mapFromTargetToCorpusPoints::Array{CartesianIndex{DimensionCount}, DimensionCount}
+
+    # NEW array of linear index i.e. Int64
+    # mapFromTargetToCorpusPoints::Array{MapElementType, DimensionCount}
+
     hasValue::BitArray{DimensionCount}
 end
 
@@ -63,9 +72,10 @@ The coordinates of the best match for points in the synth region is unknown.
 
 In original C, prepare_target_sources()
 =#
-function initialSynthResult(targetImage::MaskedImage)
+function initialSynthResult(
+        targetImage::MaskedImage{ValueType, DimensionCount}
+        ) where {ValueType, DimensionCount}
     println("SynthResult initializer called")
-    # arrays same shape as target
 
     #=
     Uninitialized array of CartesianIndex.
@@ -75,9 +85,16 @@ function initialSynthResult(targetImage::MaskedImage)
     TODO Really the indices of the corpusImage.
     For more generality, allow targetImage and corpusImage to have differing dimensions.
     =#
-    elementType = CartesianIndex{ndims(targetImage.image)}
+    # elementType = CartesianIndex{ndims(targetImage.image)}
+    elementType = CartesianIndex{DimensionCount}
 
+    # TODO this is doing one allocation for each element of the image
+    # Why isn't it just one huge allocation?
     mapFromTargetToCorpusPoints = similar(targetImage.image, elementType) # {DimensionCount})
+
+    # TODO understand what an undef is
+    # mapFromTargetToCorpusPoints = Array{CartesianIndex{DimensionCount}}(undef, size(targetImage.image))
+    #mapFromTargetToCorpusPoints = Array{MapElementType}(undef, size(targetImage.image))
 
     # boolean array false only in the synth region (the selected region give by the mask)
     hasValue = trues(size(targetImage.image))

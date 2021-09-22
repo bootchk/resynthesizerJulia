@@ -3,7 +3,7 @@ Implementation of a metric.
 
 From scratch.
 
-You might not be able to include this,
+Choose one metric to include,
 if you also defined another metric having the same signature.
 =#
 
@@ -58,12 +58,16 @@ function pointDifference(
     sum::Float32 = zero(Float32)
 
     # println(typeof(targetColor.r))
-    sum += (targetColor.r - corpusColor.r)
-    sum += (targetColor.g - corpusColor.g)
-    sum += (targetColor.b - corpusColor.b)
+    # Use abs(), we want magnitude, not a signed difference
+    sum += abs(targetColor.r - corpusColor.r)
+    sum += abs(targetColor.g - corpusColor.g)
+    sum += abs(targetColor.b - corpusColor.b)
 
     #println(sum)
     #println(typeof(sum))
+
+    # Ensure the sum is positive,
+    @assert sum >= 0
     return sum
 end
 
