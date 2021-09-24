@@ -14,6 +14,7 @@ Fields are parameterized concrete types.
 
 
 include("null.jl")  # leastIndex
+include("image.jl")
 
 
 mutable struct Neighbor{ValueType, DimensionCount}

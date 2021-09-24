@@ -79,7 +79,8 @@ end
 
 
 #=
-Outer constructor of a fixed length.
+Outer constructor.
+Constructs fixed length but uninitialized.
 From an image having desired type.
 =#
 function ScatterPatch(image::MaskedImage{ValueType, DimensionCount}) where {ValueType, DimensionCount}
@@ -111,10 +112,19 @@ The absolute minimum is one (the distinguished point itself), but thats not usef
 and its not reasonable to have a test case for it.
 
 Neighbors in the ScatterPatch are the nearest distance to the given distinguishedSynthPoint.
-The distinguishedSynthPoint is in the synth region.
+(Since SortedOffsets is sorted by distance.)
+
+The distinguishedSynthPoint is strictly in the synth region.
+Other neighbors can be, but need not be, in the synth region.
+On the first pass, the proportion of neighbors that are also in the synth region builds up.
+But for example, the first point of the first pass has no neighbors in the synth regions.
+Indeeed, if the context is empty (it can be, the synth region can cover the entire target)
+Then there are no neighbors at all.
 
 This is a heuristic: best matches are usually nearer.
-The algorithm does not require neighbors to be near.
+If the algorithm did not require neighbors to be near,
+it would still find matches,
+but the algorithm would not do what the user expect: reconstruct plausibly.
 
 ScatterPatch is ordered by distance but the algorithm does not require it.
 This is distinct: not only not required to be near, also not required to be ordered.
@@ -124,10 +134,17 @@ filter so that any neighbor in the synth has a value, i.e. been synthesized alre
 (Early on, they have been nulled or blackened.)
 Use the current synthResult to determine what points have values.
 
-The context part of the target is not mutated,
+The context region of the target is not mutated
 so the value of (color of) a neighbor in the context is constant.
 
-In original, called prepareNeighbors()
+When parameters.withReplacement,
+the synth region of the target is mutated.
+But we compute a new ScatterPatch after each point is synthesized
+(using the new value of any synth points just mutated.)
+
+The value of neighbors is cached in Neighbor.
+
+In original, called prepare_neighbors()
 =#
 
 
@@ -149,7 +166,8 @@ outer constructor from a MaskedImage.
 
 This performs poorly, many allocations at push.
 =#
-
+#=
+NOT USED
 function ScatterPatch(
         targetImage::MaskedImage{ValueType, DimensionCount},
         distinguishedSynthPoint::CartesianIndex{DimensionCount},
@@ -201,7 +219,7 @@ function ScatterPatch(
     # call default constructor
     return ScatterPatch(neighbors)
 end
-
+=#
 
 #=
 Setter method for ScatterPatch.
@@ -217,10 +235,19 @@ function prepareScatterPatch(
         synthResult::SynthResult{DimensionCount},
         sortedOffsets::SortedOffsets{DimensionCount}
         )::UInt where {ValueType, DimensionCount}
-    # sortedOffsets are offsets to span the tensor of the distinguishedSynthPoint
+
+    #=
+    sortedOffsets are offsets to span the tensor of the distinguishedSynthPoint.
+    [0,0] i.e. the origin offset is at sortedOffsets[1] !!!
+    =#
 
     neighborIndex = 1
-    for offset in sortedOffsets.offsets
+
+    # OLD do not exclude the distinguished point
+    # for offset in sortedOffsets.offsets
+
+    # Exclude the distinguished point.  It is NOT its own neighbor.
+    for offset in sortedOffsets.offsets[2:length(sortedOffsets.offsets)]
         # wild: may be out of bounds
         wildPoint = pointAtOffset(distinguishedSynthPoint, offset)
 
@@ -229,7 +256,10 @@ function prepareScatterPatch(
                 targetImage,
                 wildPoint,     # framed point
                 synthResult)
-            # assert wildPoint is not wild: is in bounds
+            #=
+            assert wildPoint is not wild: is in bounds
+            assert wildPoint has a value
+            =#
 
             scatterPatch.neighbors[neighborIndex].offset = offset
             scatterPatch.neighbors[neighborIndex].targetPoint = wildPoint  # framed point

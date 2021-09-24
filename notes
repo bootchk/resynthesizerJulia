@@ -18,8 +18,11 @@ Test over many dimensions and element types
 
 
 Run a specific test program in the REPL with debugging:
+(Use "Main", not "all".  "all" will debug Julia modules also.
+"Main" signifies the main module that you are writing,
+even if it is not declared a module per se.)
 
-julia> ENV["JULIA_DEBUG"] = all
+julia> ENV["JULIA_DEBUG"] = Main
 julia> include("test/1D/tiny.jl")
 julia> test(text,mask)
 

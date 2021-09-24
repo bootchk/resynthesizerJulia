@@ -1,17 +1,27 @@
 
-using Printf
 
-include("scatterPatch.jl")
-include("patchMatch.jl")
+#=
+TODO
+Define a module so we can debug the search independently.
+module PatchSearch
+export searchForPatchMatches
+include("patchMatchSearch.jl")
+end
+=#
 
-include("result/searchResult.jl")
 
+# kinds of search
 include("heuristicPatchMatch.jl")
 include("randomPatchMatch.jl")
 
+include("../image.jl")   # MaskedImage
+
+# patch comparison method
+include("../patchMatch.jl")
+
 
 #=
-Search for a better match in corpus for a target point.
+Search for a better matching patch in corpus for a patch in target around target point.
 Better than known match (from prior passes.)
 
 This understands that a search has two, sequential phases: "by heuristic", and "at random".

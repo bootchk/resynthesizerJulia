@@ -28,7 +28,7 @@ include("../../src/resynthesizer.jl")
 
 # mock test data
 # global so it persists and out of the test
-image = load("/home/bootch/git/resynthesizerJulia/test/data/tinylighthouse.png")
+image = load("/home/bootch/git/resynthesizerJulia/test/data/in/tinylighthouse.png")
 # small mask
 mask = falses(size(image))
 mask[3:4, 2:3] .= true

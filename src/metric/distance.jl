@@ -59,13 +59,17 @@ function pointDifference(
     sum::Float32 = zero(Float32)
 
     # println(typeof(targetColor.r))
-    # Use abs(), we want magnitude, not a signed difference
+    #=
+    Use abs(), we want magnitude, not a signed difference.
+    Depends on whether the cauchy function is computed from a symmetric table
+    =#
     for value in (  targetColor.r - corpusColor.r,
                     targetColor.g - corpusColor.g,
                     targetColor.b - corpusColor.b,
                     )
-        # sum += abs(value) # negLnCauchy(abs(value)
-        sum += negLnCauchy(abs(value))
+        # sum += abs(value)
+        # sum += negLnCauchy(abs(value))
+        sum += negLnCauchy(value)
     end
 
     #println(sum)

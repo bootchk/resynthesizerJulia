@@ -62,7 +62,7 @@ function matchPatchesAtHeuristicCorpusPoints(synthPatch, targetImage, corpusImag
                     # Better or equal to any point probed in this search and in this pass
                     # TODO an assertion to prove it
                     setBetterSearchResult(searchResult, probeResult, wildIndex)
-                    @debug  "Better heuristic match" searchResult
+                    @debug  "Better heuristic probe, at" searchResult wildIndex
 
                     # Is better, might be perfect
                     if probeResult.betterment == PerfectMatch

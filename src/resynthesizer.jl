@@ -98,6 +98,8 @@ using Printf
 include("image.jl")
 include("passes.jl")
 include("result/synthResult.jl")
+include("result/searchResult.jl")
+
 include("scatterPatch.jl")
 include("parameters.jl")
 

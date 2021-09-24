@@ -1,7 +1,7 @@
 
 
-include("patchMatchSearch.jl")
-include("result/searchResult.jl")
+include("searchPatches/searchPatches.jl")
+
 
 #=
 A pass that searches.

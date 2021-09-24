@@ -29,17 +29,10 @@ function matchPatchesAtRandomCorpusPoints(
         if probeResult.betterment != NotBetter
             # Better or equal to any point probed in this pass
 
-            # TODO a method of SearchResult
-            # Lift the probeResult into the searchResult
+            # Call method of SearchResult to lift the probeResult into the searchResult
             setBetterSearchResult(searchResult, probeResult, corpusPatchCenterPoint)
-            #=
-            OLD
-            searchResult.bestMatchPointInCorpus = corpusPatchCenterPoint
-            # Any further searching must best this latest probeResult
-            searchResult.bestProbeResult = probeResult
-            =#
 
-            @debug  "Better random match" result
+            @debug  "Better random probe, at" probeResult corpusPatchCenterPoint
 
             # Is better, might be perfect
             if probeResult.betterment == PerfectMatch
