@@ -100,7 +100,7 @@ include("passes.jl")
 include("result/synthResult.jl")
 include("result/searchResult.jl")
 
-include("scatterPatch.jl")
+#include("scatterPatch.jl")
 include("parameters.jl")
 
 # global
@@ -109,33 +109,26 @@ const parameters = ResynthesizerParameters()
 const metric = DE_94()
 
 #=
-Inpaint variation.
-"inpaint" is tradional term.  In GIMP app, AKA "heal selection"
-
-Takes one image and a mask.
-Returns new image with the masked region synthesized from its surroundings.
-
-The one image is first divided into a target and corpus image.
-The target image is the input.
-The target image is  mutated, in the masked region, called the "synth" as a noun.
-
-The corpus is inverse of mask applied to input.
-The corpus is immutable.
 
 Note that the original implementation used the word "source" for the target image.
 Also, the original used the word "target" ambiguously to mean the masked region of the target.
 =#
 
 #=
-The algorithm accepts many abstract types,
+The applications accepts many abstract types,
 but internally uses more concrete types.
 =#
 function resynthesize(
-    image::AbstractArray{T,N},
-    mask::AbstractArray{Bool,N},
-    ) where {N,T}
+    targetImage::MaskedImage{ValueType, DimensionCount},  # AbstractArray{T,N},
+    corpusImage::MaskedImage{ValueType, DimensionCount}    # AbstractArray{Bool,N},
+    ) where {ValueType, DimensionCount}
 
-    @printf("Image length %d\n", length(image))
+    #=
+    The mask on the target defines the synth region to be possibly mutated.
+    The mask on the corpus defines the selected region to sample from.
+    =#
+
+    @printf("Image length %d\n", length(targetImage.image))
 
     #=
     Seed the RNG so that the random number sequence is reproducible i.e. deterministic.
@@ -143,19 +136,6 @@ function resynthesize(
     Not strictly necessary, but it aids in debugging so that tests are more reproducible.
     =#
     Random.seed!(123)
-
-    # TODO arranging images is a specialization of the general algorithm
-    # i.e. extract this to plugins
-    targetImage = MaskedImage(image, mask)         # image is mutable
-
-    # The corpus is an immutable copy of the in image, with an inverted mask
-    invertedMask = .!mask
-    corpusImage = MaskedImage(copy(image), invertedMask)      # TODO immutable
-    println(typeof(invertedMask))
-    @assert isconcretetype(typeof(targetImage.mask))
-
-
-    # Rest is part of the general algorithm
 
     # uninitialized mutable struct
     synthPatch = ScatterPatch(targetImage)
@@ -166,7 +146,7 @@ function resynthesize(
     # Initial, singleton searchResult, allocated once and reused by passes
     searchResult = SearchResult(targetImage.image)
 
-    # offsets to span the array of the targetImage
+    # offsets to span the targetImage
     sortedOffsets = SortedOffsets(targetImage.image)
 
     # TODO use toggled_asserts
@@ -185,8 +165,12 @@ function resynthesize(
     makePassesUntilGoodEnough(targetImage, corpusImage, synthPatch, synthResult, searchResult, sortedOffsets)
     # assert targetImage is mutated and synthResult is mutated
 
-    # The result is the mutated original (sans mask)
-    # Assert that only the masked region of the original is mutated.
-    # targetImage.image refers to the original
-    return image
+    #=
+    The result is the possibly mutated original (sans mask).
+    Possibly: depends on parameters.withReplacement.
+    Assert that only the masked region of the original is mutated.
+    =#
+
+    # TODO return the synthResult
+    return targetImage.image
 end

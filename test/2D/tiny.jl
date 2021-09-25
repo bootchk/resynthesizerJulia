@@ -24,7 +24,7 @@ julia> test(image, mask)
 # For "load" local  files
 using FileIO
 # The tested item
-include("../../src/resynthesizer.jl")
+include("../../src/apps/inpaint.jl")
 
 # mock test data
 # global so it persists and out of the test
@@ -34,6 +34,6 @@ mask = falses(size(image))
 mask[3:4, 2:3] .= true
 
 function test(image, mask)
-    # test resynthesizer
-    resynthesize(image, mask)
+    # test inpaint
+    inpaint(image, mask)
 end
