@@ -74,7 +74,7 @@ function matchPatchesAtHeuristicCorpusPoints(synthPatch, targetImage, corpusImag
         end
     end
 
-    @debug  "Heuristic search result" searchResult
+    @debug  "  >>Heuristic search result" searchResult
     return searchResult
 end
 

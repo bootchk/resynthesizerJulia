@@ -19,7 +19,6 @@ function matchPatchesAtRandomCorpusPoints(
 
     for i = 1:parameters.maxProbeCount
         corpusPatchCenterPoint = generateRandomMaskedPoint(corpusImage)
-        # OLD PointInMaskedImage( generateRandomMaskedPoint(corpus), corpus)
         probeResult = patchMatch(
             targetImage, corpusImage,
             corpusPatchCenterPoint,
@@ -32,7 +31,7 @@ function matchPatchesAtRandomCorpusPoints(
             # Call method of SearchResult to lift the probeResult into the searchResult
             setBetterSearchResult(searchResult, probeResult, corpusPatchCenterPoint)
 
-            @debug  "Better random probe, at" probeResult corpusPatchCenterPoint
+            @debug  "    Better random probe, at" probeResult corpusPatchCenterPoint
 
             # Is better, might be perfect
             if probeResult.betterment == PerfectMatch
@@ -42,6 +41,6 @@ function matchPatchesAtRandomCorpusPoints(
         end
     end
 
-    @debug  "Random search result " searchResult
+    @debug  "  >>Random search result " searchResult
     return searchResult
 end

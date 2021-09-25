@@ -119,7 +119,7 @@ function searchForPatchMatches(
     else
         @debug "Skipping random search phase since perfect match"
     end
-    @debug  "Overall search result" searchResult
+    @debug  ">>>>Combined search result, for target point" searchResult synthPatchCenterPoint
 
     return searchResult
 end

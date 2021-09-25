@@ -278,7 +278,7 @@ function prepareScatterPatch(
         @debug "Patch small, length %d" neighborIndex
     end
 
-    @debug "Prepared scatter patch" scatterPatch
+    # @debug "Prepared scatter patch" scatterPatch
     # return count of valid points in synthPatch
     return neighborIndex
 end

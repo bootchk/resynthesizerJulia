@@ -1,24 +1,27 @@
 
-#=
-When there are many implementations of metric having same signature,
-choose one.
-=#
 
-# TODO some of these are cruft
+include("neighbor.jl")
 
-# include("colorMetric.jl")
-#include("pointDifference.jl")
 
 #=
-TODO do we need to include every possible metric?
+Include the metric functions.
+Include at least one metric function for every supported ValueType,
+e.g. one for Color and one for Char.
+When there are many implementations of metric having same signature, choose one.
 =#
+# TODO cruft here
 include("metric/distance.jl")
 include("metric/character/nieve.jl")
+# include("colorMetric.jl")
+# include("pointDifference.jl")
 
 
 #=
 Return difference between points in two different Arrays.
 (E.G. difference between colors of pixels in 2D images.)
+
+This hides dealing with bounds and masking in the corpus (see below.)
+It generically calls pointDifference, a metric function (see elsewhere.)
 
 The points belong to a patch.
 Assert the center point of the corpus patch is ensured in bounds,
@@ -35,6 +38,10 @@ When masked or out of bounds, return a maximum difference.
 
 Not a separate function in the original code.
 =#
+
+
+#=
+OLD, when points were PointInMaskedImage i.e. carried their frame.
 
 function comparePatchPoints(patchPointTarget, patchPointCorpus)
     result = 0
@@ -54,6 +61,7 @@ function comparePatchPoints(patchPointTarget, patchPointCorpus)
 
     return result
 end
+=#
 
 #=
 Specialized: first argument is Neighbor.

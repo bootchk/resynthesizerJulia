@@ -1,6 +1,8 @@
 
 #=
 Enumerated type describing how a better patch was found.
+
+!!! JustBetter is better or equal.
 =#
 
 @enum Betterment NotBetter JustBetter PerfectMatch

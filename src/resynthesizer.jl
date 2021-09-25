@@ -137,7 +137,15 @@ function resynthesize(
 
     @printf("Image length %d\n", length(image))
 
+    #=
+    Seed the RNG so that the random number sequence is reproducible i.e. deterministic.
+
+    Not strictly necessary, but it aids in debugging so that tests are more reproducible.
+    =#
+    Random.seed!(123)
+
     # TODO arranging images is a specialization of the general algorithm
+    # i.e. extract this to plugins
     targetImage = MaskedImage(image, mask)         # image is mutable
 
     # The corpus is an immutable copy of the in image, with an inverted mask

@@ -1,6 +1,7 @@
 
 include("pointCompare.jl")
 include("offset.jl")
+include("scatterPatch.jl")
 
 #=
 Match a patch.
