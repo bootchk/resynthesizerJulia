@@ -8,7 +8,7 @@ Using testing framework.
 
 # See "Code Loading"
 # Either include, or import package
-include("../src/resynthesizer.jl")
+include("../src/apps/inpaint.jl")
 # using Resynthesizer
 
 # the Julia testing framework
@@ -75,11 +75,11 @@ using ColorTypes
   end
 
   # time or profile or none
-  #out = @time resynthesize(img, mask)
+  #out = @time inpaint(img, mask)
   # @profile
   # or better to do this in the REPL?
-  # out = resynthesize(img, mask)
-  out = @time resynthesize(img, mask)
+  # out = inpaint(img, mask)
+  out = @time inpaint(img, mask)
 
 
   img_path = "/home/bootch/git/resynthesizerJulia/test/out.png"

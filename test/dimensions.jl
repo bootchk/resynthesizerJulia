@@ -1,6 +1,6 @@
 #=
 Test suite across dimensions and element types.
-An aggregation of individual test cases (e.g. see 2D/test/tiny.jl)
+An aggregation of individual test cases (e.g. see test/2D/tiny.jl)
 
 See below.
 Loosely speaking:
@@ -12,7 +12,7 @@ Loosely speaking:
 =#
 
 # The tested code
-include("../src/resynthesizer.jl")
+include("../src/apps/inpaint.jl")
 
 
 # the Julia testing framework
@@ -49,7 +49,7 @@ Use let;end for separate scope in each test (no spillover of bindings)
         mask[3:4, 2:3] .= true
 
         outPath = "data/out/tiny.txt"
-        @test_reference outPath resynthesize(data, mask)
+        @test_reference outPath inpaint(data, mask)
     end
 
 
@@ -61,7 +61,7 @@ Use let;end for separate scope in each test (no spillover of bindings)
         mask[3:4, 2:3] .= true
 
         outPath = "data/out/tinylighthouse.png"
-        @test_reference outPath resynthesize(data, mask)
+        @test_reference outPath inpaint(data, mask)
     end
 
 
@@ -79,13 +79,13 @@ Use let;end for separate scope in each test (no spillover of bindings)
         # synthesize a small cube in the horizontal slices 5 and 6
         mask[3:4, 2:3, 5:6] .= true
 
-        out = resynthesize(data, mask)
+        out = inpaint(data, mask)
 
         outPath = "data/out/mri"
         #=
         TODO this fails because test_reference fails to handle 3D???
 
-        @test_reference outPath resynthesize(data, mask)
+        @test_reference outPath inpaint(data, mask)
 
         Consequently, we iteratively compare some slices of the image.
         =#
@@ -138,7 +138,7 @@ Use let;end for separate scope in each test (no spillover of bindings)
         mask[3:4, 2:3, 1:3, 5:6] .= true
 
         # test
-        out = resynthesize(image, mask)
+        out = inpaint(image, mask)
 
         outPath = "data/out/multi"
         #=

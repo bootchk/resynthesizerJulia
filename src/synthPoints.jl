@@ -34,7 +34,7 @@ Return vector of points to be synthesized.
 Ordered by the optional ordering function, else the default: shuffled.
 
 The order causes a "direction" of synthesis, e.g. brushfire from a boundary.
-Random is a reasonable default.
+Random shuffle is a reasonable default.
 Scan order (across, then down or vice versa) usually bad.
 Other orders, say brushfire inwards, often give better results.
 =#

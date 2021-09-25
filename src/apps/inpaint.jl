@@ -9,7 +9,7 @@ Returns new image with the masked region synthesized from its surroundings.
 
 The one image is first divided into a target and corpus image.
 The target image is the input.
-The target image is  mutated, in the masked region, called the "synth" (a noun) region.
+The algorithm mutates the target image in the masked region, called the "synth" (a noun) region.
 
 The corpus is inverse of mask applied to input.
 The corpus is immutable.

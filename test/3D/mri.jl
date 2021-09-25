@@ -3,7 +3,7 @@ Test resynthesizer in 3D using commonly available test data.
 =#
 
 # The tested item
-include("../../src/resynthesizer.jl")
+include("../../src/inpaint.jl")
 
 
 using ImageView, Images
@@ -34,7 +34,7 @@ println("mask is:")
 println(summary(mask))
 
 function test(data, mask)
-    result = resynthesize(data, mask)
+    result = inpaint(data, mask)
 
     # Assert result is 3D array
 

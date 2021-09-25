@@ -8,32 +8,31 @@ Usage:
 
 >julia
 julia> include("large.jl")
-julia> @time test(img, mask)
+julia> @time test(image, mask)
 
 OR
 
 >julia --track-allocation=user
 and the usual process for analyzing mallocs...
 julia> include("large.jl")
-julia> test(img, mask)
+julia> test(image, mask)
 julia>using Profile
 julia>Profile.clear_malloc_data()
-julia> test(img, mask)
+julia> test(image, mask)
 =#
 
 # For "load" local  files
 using FileIO
 # The tested item
-include("../src/resynthesizer.jl")
+include("../../src/apps/inpaint.jl")
 
 # mock test data
 # global so it persists and out of the test
-img = load("/home/bootch/git/resynthesizerJulia/test/data/lighthouse.png")
+image = load("/home/bootch/git/resynthesizerJulia/test/data/in/lighthouse.png")
 # large mask
-mask = falses(size(img))
+mask = falses(size(image))
 mask[50:350,300:400] .= true
 
-function test(img, mask)
-    # test resynthesizer
-    resynthesize(img, mask)
+function test(image, mask)
+    inpaint(image, mask)
 end

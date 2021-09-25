@@ -11,7 +11,7 @@ julia> @time test(text, mask)
 
 
 # The tested item
-include("../../src/resynthesizer.jl")
+include("../../src/apps/inpaint.jl")
 
 # mock test data
 # global so it persists and out of the test
@@ -29,6 +29,5 @@ mask = falses(size(text))
 mask[3:4] .= true
 
 function test(text, mask)
-    # test resynthesizer
-    resynthesize(text, mask)
+    inpaint(text, mask)
 end
