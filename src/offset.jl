@@ -12,7 +12,7 @@ Hides in the sense: I went back and forth choosing types
 in the algorithm when testing 1D, 2D,...
 
 In Resynthesizer, offsetting points is done:
-1) when choosing neighbors (patch is a set of nearest offset points.)
+1) when choosing neighbors (ScatterPatch is a set of nearest offset points.)
 2) in the heuristic search, inverse offsetting back into the target.
 
 TODO when sampling random points in the corpus,
@@ -67,6 +67,8 @@ end
 
 
 #= CRUFT
+Formerly called from ScatterPatch
+
 function pointAtOffset(pointInImage, offset)
     #= OLD, framed
     return PointInMaskedImage(

@@ -6,7 +6,28 @@ SortedOffsets is a vector of vectors (directional arrows) that span a tensor.
 !!! Not indexes ( which are usually one based and positive).
 Offsets are zero based and signed.
 
+
+The zero offset
+===============
+
+For the Resynthesizer algorithm, for most uses:
+
 !!! Does not include the zero length vector, e.g. for 2D, (0,0)
+IOW, a patch is a donut, with a hole in the middle.
+
+When parameters.withReplacement (which is most use cases)
+we are synthesizing the center of the patch,
+and don't want to compare the in-progress synthesized value with the corpus,
+so we exclude the zero offset.
+In other words, the being-synthesized point it not its own neighbor.
+
+Otherwise, when we are just finding the best match,
+we might as well compare the centers of the patches, target and corpus.
+
+
+
+Order
+=====
 
 Ordered by distance from the origin.
 The ordering makes patches that are compact around the distinguished point.
@@ -14,8 +35,10 @@ A compact patch is crucial.
 
 E.G. for 2D the set of shortest distance offsets is [(-1,0), (1,0), (0,-1), (0,1)]
 
-Includes enough offsets to span an Array
-(from any corner to the opposite corner.)
+Spanning
+========
+
+Includes enough offsets to span an Array (from any corner to the opposite corner.)
 
 Consider this worst case diagram of a target image and its synth region
 
@@ -31,15 +54,15 @@ Z = distinguished point of a patch (also in the synth region)
 To reach from the distinguished point in a corner, to the opposite corner
 requires an offset the size of the dimensions of the target.
 Also, requires a negative offset.
-Consequently, offsets that will from any point in the target
+Consequently, offsets that will reach from any point in the target
 to any other point are all the vectors (of all signedness)
 whose x,y are the dimensions of the target.
 IOW, the length of the vector of sorted offsets is four times the length of the target.
-=#
 
-#=
+
+Use of the entire vector
+========================
 For the Resynthesizer algorithm:
-
 Only in rare use cases are all the sorted offsets actually used.
 That is, the above case is a worst case.
 
@@ -53,15 +76,20 @@ We only create it once, and pass it.
 We don't bother to create a different, smaller instance of SortedOffsets for subsequent passes.
 
 TODO Faster in most use cases to generate lazily.
+
+
+
 =#
 
-# Define type
-#= OLD type alias
+
+#=
+Not sure why I don't just define a type alias: (maybe it affects performance?)
 SortedOffsets = Vector{CartesianIndex{DimensionCount}} where {DimensionCount}
 =#
 struct SortedOffsets{DimensionCount}
     offsets::Vector{CartesianIndex{DimensionCount}}
 end
+
 
 #=
 Outer constructor from a tensor.
@@ -87,24 +115,9 @@ function SortedOffsets(
     =#
     sortedOffsets = sort!(offsets, by=cityBlockDistance)
 
-    # Exclude the first element which is CartesianIndex(0,0)
-
-    #=
-    Strategies:
-
-    pop() or deleteat() does 25M allocations for medium data
-    deleteat!(sortedOffsets, 1)
-
-    Slice is performant.  It creates a view, or a copy?
-    =#
-    # This still does many allocations??? TODO
-    # TEMP testing allocs when this is omitted
-    # sortedOffsets = sortedOffsets[2:end]
-
-    # FAIL, no signature for SubArray
-    # sortedOffsets = @view sortedOffsets[2:end]
-
-    # Assert size is one less than before
+    if parameters.withReplacement
+        sortedOffsets = excludeFirstElement(sortedOffsets)
+    end
 
     # call default constructor to encapsulate vector in a struct
     result = SortedOffsets(sortedOffsets)
@@ -112,11 +125,34 @@ function SortedOffsets(
     return result
 end
 
-#=
-Create vector of offsets that span the tensor.
 
-Offsets are signed and include zero [-x,...,0,...,x]
+#=
+I struggled to get this performant.
+It still does many allocations that could probably be eliminated,
+but it is only done once.
+
+Strategies:
+
+pop() or deleteat() does 25M allocations for medium data
+deleteat!(sortedOffsets, 1)
+
+Slice is performant.  It creates a view, or a copy?
+
+This still does many allocations??? TODO
+sortedOffsets[2:end]
+
+FAIL, no signature for SubArray
+@view sortedOffsets[2:end]
+
+# Assert size is one less than before
 =#
+
+# Exclude the first element, the zero offset
+function excludeFirstElement(vector)
+    result = vector[2:length(vector)]
+end
+
+
 
 #=
 Create a vector of all the arrows to span a tensor.
@@ -126,10 +162,8 @@ of CartesianIndex of suitable ranges (negative:positve), then convert
 to a Vector.
 
 Another strategy would be to generate all words of (-1,1) of length k,
-then multiply by CartesianIndices of the tensor, shifted by substracting 1.
-
-Specialized for 2D
-TODO more generally for multidimension
+then multiply by CartesianIndices of the tensor, shifted by substracting 1,
+to get zeros.
 =#
 function createOffsets(
                 tensor::Array{ValueType, DimensionCount}

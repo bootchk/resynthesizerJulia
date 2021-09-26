@@ -2,6 +2,9 @@
 Structure of this directory
 ===========================
 
+Dimensions
+==========
+
 A main goal is the algorithm generic on type and dimension of data.
 
 Thus the test programs are structured along dimensions, then data type.
@@ -13,6 +16,23 @@ Thus the test programs are structured along dimensions, then data type.
 3D/
   image (e.g. video)
 
-unit/    unit tests 
+dimensions.jl tests across all supported dimensions, 1D to 4D
+
+Apps
+====
+
+The algorithm as several applications.
+
+Most tests are the inpaint app.
+
+/render tests the render app
+
+
+Other
+=====
+
+case/   tests other images commonly used by other researchers
+
+unit/    unit tests
 
 other miscellaneous files

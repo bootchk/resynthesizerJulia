@@ -8,6 +8,32 @@ include("result/synthResult.jl")
 A patch that can be neither rectangular nor contiguous.
 That is, it can be an irregular shape and sparse.
 
+Shape
+=======
+
+Irregular i.e. non-centered
+
+ Here continuguous but skewed with distinguished point in corner
+ XXX
+ XXC
+
+Here, non-contiguous
+
+X  X  X
+X
+X  C
+X XXXXX
+
+Here, non-rectangular but nearest to distinguished point.
+
+ X
+XCX
+ X
+
+
+Length
+======
+
 All ScatterPatch's need not have the same length.
 Depending on the given images and the stage of the process,
 the length of a ScatterPatch might not be as large as we desire.
@@ -15,9 +41,17 @@ The algorithm does not require the given tensors (usually images)
 to be larger than a minimum size needed to create lengthy patches.
 More discussion later, under "testing."
 
+The usual size is defined by parameters.maxPatchSize
+
+Disambiguation
+==============
+
 Originally called neighbors (plural) or neighborhood, but that denotes contiguous.
 We still use the word neighbor for an element of a scatterPatch,
 since neighbor (singular) does not denote adjacent.
+
+Patches vary across and within passes of the algorithm
+======================================================
 
 During the Resynthesizer process, when repeating a point,
 the point's scatterPatch might have more, different, closer neighbors
@@ -25,19 +59,29 @@ than on a prior (especially the first) pass.
 IOW a scatterPatch is like a shotgun pattern in the first pass,
 but a contiguous patch in later passes.
 
+Also, since we are replacing the value of a point,
+that affects the patches of its nearby points.
+
+Distinguished point
+===================
+
 A scatterPatch is around a distinguished point.
 Often, but not necessarily, the distinguished point is near the center.
 An example when the distinguished point is not near the center:
 when the synth region is at the edge of the target.
 
+
+Defined in target, overlaid on corpus
+=====================================
+
 A ScatterPatch comprises target points.
 The same pattern of a ScatterPatch is searched for in the corpus.
 But the same pattern overlain on the corpus might be out of bounds,
 i.e. is clipped.
-=#
 
-#=
-Testing:
+
+Testing
+=======
 
 Case: vector of offsets shorter in length than  ScatterPatch.
 Expect ScatterPatch no longer in length than vector of offsets.
@@ -246,10 +290,16 @@ function prepareScatterPatch(
     # OLD do not exclude the distinguished point
     # for offset in sortedOffsets.offsets
 
-    # Exclude the distinguished point.  It is NOT its own neighbor.
-    for offset in sortedOffsets.offsets[2:length(sortedOffsets.offsets)]
+    #=
+    sortedOffsets might include the zero offset.
+    IOW the distinguished point is NOT its own neighbor.
+    See sortedOffsets.jl
+    =#
+    for offset in sortedOffsets.offsets
+
+        wildPoint = offsetPatchPoint(targetImage.image, distinguishedSynthPoint, offset)
+        #OLD wildPoint = pointAtOffset(distinguishedSynthPoint, offset)
         # wild: may be out of bounds
-        wildPoint = pointAtOffset(distinguishedSynthPoint, offset)
 
         # TODO filtering side effect on wildPoint i.e. toroid
         if ! isPatchPointInTargetFiltered(
