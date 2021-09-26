@@ -12,7 +12,7 @@ Loosely speaking:
 =#
 
 # The tested code
-include("../src/apps/inpaint.jl")
+include("../../src/apps/inpaint.jl")
 
 
 # the Julia testing framework

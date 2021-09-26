@@ -5,6 +5,7 @@
 "inpaint" is tradional term.  In GIMP app, AKA "heal selection"
 
 Takes one image and a mask.
+
 Returns new image with the masked region synthesized from its surroundings.
 
 The one image is first divided into a target and corpus image.

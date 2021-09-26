@@ -1,34 +1,33 @@
 #=
 <render> application of the resynthesizer algorithm.
 
-Takes one image, which is the corpus.
+Takes one image and a mask.
+Masked region of image is the corpus.
 
 Returns new image of the same size
-synthesized in its entirety from all the given image.
+synthesized in its entirety from the corpus.
+
+TODO render target of separately given dimensions
 =#
 
 include("../resynthesizer.jl")
 
 function render(
-    image::AbstractArray{T,N},  # corpus
+    corpusImage::AbstractArray{T,N},
+    corpusSelectionMask::AbstractArray{Bool,N}
     ) where {N,T}
 
+    corpusMaskedImage = MaskedImage(corpusImage, corpusSelectionMask)
+
+    # Output target is same size as corpus.
+    newImage = copy(corpusImage)
 
     #=
-    Mask same size a corpus, all true.
+    Mask same size as targetImage, all true.
     =#
-    mask = trues(image)
+    newMask = trues(size(newImage))
 
-    #=
-    target same size as corpus.
-    =#
-    targetImage = MaskedImage(copy(image), mask)
+    targetMaskedImage = MaskedImage(newImage, newMask)
 
-    #=
-    The corpus is the in image,
-    with a mask representing entire selection.
-    =#
-    corpusImage = MaskedImage(image, mask)         # image is mutable
-
-    resynthesize(targetImage, corpusImage)
+    resynthesize(targetMaskedImage, corpusMaskedImage)
 end

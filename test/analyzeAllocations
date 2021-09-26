@@ -43,9 +43,20 @@ analyze_malloc("src")
 That lists the lines of code and how many allocations they make.
 Concentrate on the last, the largest allocations.
 
-In the shell, clear the .mem files
 
-rm src/*.mem
+clear the .mem files
+====================
+
+find . -name *.mem -exec rm -rf {} \;
+
+
+View an image
+=============
+
+julia> using ImageView
+julia> imshow(MaskedImage)
+
+Expect a window to open.
 
 
 Work from tiny to large
