@@ -76,8 +76,8 @@ function SortedOffsets(
     # mock
     # return createMockSortedOffsets()
 
+
     offsets = createOffsets(tensor)
-    println(typeof(offsets))
 
     #=
     sort() alone would sort on y, then x
@@ -86,8 +86,6 @@ function SortedOffsets(
     sort! sorts in place (but with no fewer allocations?)
     =#
     sortedOffsets = sort!(offsets, by=cityBlockDistance)
-    println(typeof(sortedOffsets))
-    println(size(sortedOffsets))
 
     # Exclude the first element which is CartesianIndex(0,0)
 
@@ -107,10 +105,11 @@ function SortedOffsets(
     # sortedOffsets = @view sortedOffsets[2:end]
 
     # Assert size is one less than before
-    println(size(sortedOffsets))
 
     # call default constructor to encapsulate vector in a struct
-    return SortedOffsets(sortedOffsets)
+    result = SortedOffsets(sortedOffsets)
+    @debug "SortedOffsets of type, size" typeof(result) size(result)
+    return result
 end
 
 #=

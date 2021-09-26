@@ -24,7 +24,7 @@ function generateSynthPoints(
         ) where{ValueType, DimensionCount}
         #Fail for N==1 )::Vector{CartesianIndex{DimensionCount}}
     result = findall(target.mask)
-    println(typeof(result))
+    @debug "SynthPoints type, size" size(result) typeof(result)
     return result
 end
 

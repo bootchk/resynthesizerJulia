@@ -37,7 +37,7 @@ function nullElementForTensor(tensor)
     end
     =#
 
-    println(typeof(nullValue))
+    @debug "typeof null element" typeof(nullValue)
     # Ensure nullValue to be same type as element of Array
     @assert typeof(nullValue) == eltype(tensor)
 

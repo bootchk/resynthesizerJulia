@@ -35,7 +35,7 @@ function test(data, mask)
     # Assert result is Array(UInt8)
 
     #=
-    Convert to string that prints nicely.
+    Convert to string that displays nicely.
     Broadcast conversion function Char()
     =#
     Char.(result)

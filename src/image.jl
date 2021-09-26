@@ -148,28 +148,7 @@ function isPointSelectedInMaskedImage(
 end
 
 
-# TODO Duplicate, move this to offset.jl
-#=
-Return point offset from a given point.
-Coordinate arithmetic.
 
-Returned point may be out of bounds.
-Returned point is-a PointInMaskedImage, that is we do *not* discard the frame.
-=#
-function pointAtOffset(pointInImage, offset)
-    #println(pointInImage.point)
-    #= OLD, framed
-    return PointInMaskedImage(
-        pointInImage.point + offset,    # unchecked coordinate arithmetic
-        pointInImage.maskedImage
-    )
-    =#
-    return pointInImage + offset # unchecked coordinate arithmetic
-
-    #result = copy(pointInImage)
-    #result.point = pointInImage.point + offset
-    #return result
-end
 
 #=
 Is the point in bounds?
@@ -200,7 +179,7 @@ try
     # access the point, result is unused
     pointInImage.maskedImage.image[pointInImage.point]
 catch BoundsError
-    #println("not isPointInBoundsOfImage")
+    # @debug "not isPointInBoundsOfImage"
     isInBounds = false
 end
 return isInBounds

@@ -37,8 +37,6 @@ function makeAPass(targetImage, corpusImage, targetPoints, synthPatch, synthResu
             synthResult,
             sortedOffsets)
         =#
-        #println(typeof(synthPatch))
-        #println(isconcretetype(typeof(synthPatch)))
 
         patchSize = prepareScatterPatch(
             synthPatch,

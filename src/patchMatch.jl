@@ -57,14 +57,6 @@ function patchMatch(
     for neighbor in synthPatch.neighbors
 
         # Mutate the point of the framed point.  CartesianIndex arithmetic.
-        #=
-        OLD too many allocations???
-        foo = corpusPatchCenterPoint.point + patchPoint.offset
-        println("types")
-        println(typeof(corpusPatchCenterPoint.point))
-        println(typeof(patchPoint.offset))
-        patchPointCorpus.point =  foo
-        =#
 
         # OLD offset points directly
         # patchPointCorpus = corpusPatchCenterPoint + neighbor.offset
@@ -82,7 +74,7 @@ function patchMatch(
 
         if differenceSum >= patchDiffToBeat
             # patch is already worse than previous best
-            # println("Short circuit patch match")
+            # @debyg "Short circuit patch match"
             break
         end
     end

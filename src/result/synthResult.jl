@@ -75,7 +75,7 @@ In original C, prepare_target_sources()
 function initialSynthResult(
         targetImage::MaskedImage{ValueType, DimensionCount}
         ) where {ValueType, DimensionCount}
-    println("SynthResult initializer called")
+    @debug "SynthResult initializer called"
 
     #=
     Uninitialized array of CartesianIndex.
@@ -102,7 +102,7 @@ function initialSynthResult(
     @debug "Initial hasValue map" hasValue
 
     result = SynthResult(mapFromTargetToCorpusPoints, hasValue)
-    println(typeof(result))
+    @debug "typeof SynthResult" typeof(result)
     # Useless  to assert isconcretetype(result) since all structs are concrete
     return result
 end

@@ -93,8 +93,6 @@ because it is not easy to understand what the inferred types are
 and using code_warntype)
 =#
 
-using Printf
-
 include("image.jl")
 include("passes.jl")
 include("result/synthResult.jl")
@@ -128,7 +126,7 @@ function resynthesize(
     The mask on the corpus defines the selected region to sample from.
     =#
 
-    @printf("Image length %d\n", length(targetImage.image))
+    @debug "Image length, size" length(targetImage.image) size(targetImage.image)
 
     #=
     Seed the RNG so that the random number sequence is reproducible i.e. deterministic.
@@ -152,8 +150,10 @@ function resynthesize(
     # TODO use toggled_asserts
     # This is temporary, while chasing performance
     @assert isconcretetype(typeof(corpusImage))
+    @assert isconcretetype(typeof(synthPatch))
     @assert isconcretetype(typeof(synthResult))
     @assert isconcretetype(typeof(sortedOffsets))
+
 
     #=
     Nullify the synth region.

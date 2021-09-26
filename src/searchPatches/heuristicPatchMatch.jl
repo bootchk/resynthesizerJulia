@@ -104,6 +104,5 @@ function wildRelatedCorpusIndex(neighbor, synthResult)::CartesianIndex
     # TODO move to offset.jl  pointAtInverseOffset
     # @assert typeof(bestMatchingCorpusIndex) <: CartesianIndex
     wildCorpusIndex = bestMatchingCorpusIndex - neighbor.offset
-    # println(typeof(wildCorpusIndex))
     return wildCorpusIndex
 end

@@ -58,7 +58,7 @@ function pointDifference(
 
     sum::Float32 = zero(Float32)
 
-    # println(typeof(targetColor.r))
+    # typeof(targetColor.r)) is Float ???
     #=
     Use abs(), we want magnitude, not a signed difference.
     Depends on whether the cauchy function is computed from a symmetric table
@@ -71,9 +71,6 @@ function pointDifference(
         # sum += negLnCauchy(abs(value))
         sum += negLnCauchy(value)
     end
-
-    #println(sum)
-    #println(typeof(sum))
 
     # Ensure the sum is positive,
     @assert sum >= 0

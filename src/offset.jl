@@ -25,7 +25,15 @@ we could choose offsets at random and use this.
 
 #=
 Return a point (index) offset from given point.
+
+Given point is in bounds of array.
+
+Returned point may be out of bounds.
+Returned point is in frame of array.
+
+IOW this is coordinate arithmetic.
 =#
+
 
 #=
 Specific to case where index and offset are same type, usually linear index i.e. Int64,
@@ -55,3 +63,21 @@ function offsetPatchPoint(
     =#
     return CartesianIndices(array)[point] + offset
 end
+
+
+
+#= CRUFT
+function pointAtOffset(pointInImage, offset)
+    #= OLD, framed
+    return PointInMaskedImage(
+        pointInImage.point + offset,    # unchecked coordinate arithmetic
+        pointInImage.maskedImage
+    )
+    =#
+    return pointInImage + offset # unchecked coordinate arithmetic
+
+    #result = copy(pointInImage)
+    #result.point = pointInImage.point + offset
+    #return result
+end
+=#
