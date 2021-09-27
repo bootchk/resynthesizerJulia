@@ -115,9 +115,11 @@ function SortedOffsets(
     =#
     sortedOffsets = sort!(offsets, by=cityBlockDistance)
 
+    #=
     if parameters.withReplacement
         sortedOffsets = excludeFirstElement(sortedOffsets)
     end
+    =#
 
     # call default constructor to encapsulate vector in a struct
     result = SortedOffsets(sortedOffsets)

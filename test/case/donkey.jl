@@ -2,13 +2,15 @@
 #=
 Test Resynthesizer by comparing out images to reference good result image.
 
+The inpaint application.
+
 Using testing framework.
 =#
 
 
 # See "Code Loading"
 # Either include, or import package
-include("../../src/resynthesizer.jl")
+include("../../src/apps/inpaint.jl")
 # using Resynthesizer
 
 # the Julia testing framework
@@ -45,7 +47,7 @@ using ColorTypes
   # square mask of the donkey itself
   mask[175:275,100:230] .= true
 
-  out = resynthesize(image, mask)
+  out = inpaint(image, mask)
 
   # Julia macro that compares file and expression
   @test_reference outPath out

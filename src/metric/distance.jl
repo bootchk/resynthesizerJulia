@@ -10,19 +10,14 @@ if you also defined another metric having the same signature.
 
 using Colors    # RGB
 
-# metric functions
-include("negLnCauchy.jl")
+include("metricFunction/negLnCauchy.jl")
 
 #=
 Specialized for types from Colors module.
 Often: RGB{FixedPointNumbers.N0f8}
 The specialization:
 1) knows the components i.e. channels r,g,b
-2) knows kinds of arithmetic (fixed point versus float)
-that could be used for channels
-
-# TODO generic for ValueType
-# WAS RGB{T}
+2) knows kinds of arithmetic (fixed point versus float) for channels
 =#
 
 using FixedPointNumbers
@@ -30,7 +25,10 @@ using FixedPointNumbers
 function pointDifference(
         targetColor::RGB{FixedPointNumbers.N0f8},
         corpusColor::RGB{FixedPointNumbers.N0f8}
-        )   # RGB{T} where {T}   # ::Float32
+        )
+        # TODO generic for ValueType:   RGB{T} where {T}   # ::Float32
+
+
     #=
     Sum differences over the channels.
 
@@ -78,16 +76,22 @@ function pointDifference(
 end
 
 
+
+
 #=
 The maximum value of the metric.
 
 The maximum value when one (target) value is zero and the other (corpus) value is
 the max value of the difference between values of a channel,
 summed over channels.
+
+The maximum difference in a channel is 1.0 for type FixedPointNumbers.N0f8
 =#
 
 #=
 All types for channels of RGB
 are basically [0.0, 1.0] ????
+
+
 =#
-const maxPointDifference = 3 * 1.0
+const maxPointDifference = 3 * negLnCauchy(1.0)
