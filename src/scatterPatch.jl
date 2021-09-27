@@ -197,7 +197,7 @@ In original, called prepare_neighbors()
 !!! Weirdness of the original algorithm.
 The distinguishedSynthPoint is in the ScatterPatch (offset 0,0)
 even though during the first pass it doesn't have a value.
-And the comparePatchPoints() tested for and omitted the origin point.
+And the comparePointsTargetWithCorpus() tested for and omitted the origin point.
 Below, in the for loop, we won't push it again, it is filtered.
 
 push!(result, Neighbor(CartesianIndex(0,0), distinguishedSynthPoint) )

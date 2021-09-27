@@ -10,7 +10,7 @@ e.g. one for Color and one for Char.
 When there are many implementations of metric having same signature, choose one.
 =#
 # TODO cruft here
-include("metric/distance.jl")
+include("metric/colorCauchy.jl")
 include("metric/character/nieve.jl")
 # include("colorMetric.jl")
 # include("pointDifference.jl")
@@ -43,7 +43,7 @@ Not a separate function in the original code.
 #=
 OLD, when points were PointInMaskedImage i.e. carried their frame.
 
-function comparePatchPoints(patchPointTarget, patchPointCorpus)
+function comparePointsTargetWithCorpus(patchPointTarget, patchPointCorpus)
     result = 0
 
     # in bounds of the corpus (within the outer boundary)
@@ -67,7 +67,7 @@ end
 Specialized: first argument is Neighbor.
 Where a Neighbor caches the value of its point.
 =#
-function comparePatchPoints(
+function comparePointsTargetWithCorpus(
     neighbor::Neighbor{ValueType, DimensionCount},
     corpusImage::MaskedImage{ValueType, DimensionCount}, # frame
     patchPointCorpus::CartesianIndex{DimensionCount}     # framed point

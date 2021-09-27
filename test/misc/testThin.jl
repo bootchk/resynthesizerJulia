@@ -45,7 +45,7 @@ println(neighbor)
 println(typeof(neighbor.offset))
 # call compare
 #=
-@code_warntype comparePatchPoints(
+@code_warntype comparePointsTargetWithCorpus(
     neighbor,
     maskedImage,
     # Use same dummy point
@@ -55,7 +55,7 @@ println(typeof(neighbor.offset))
 
 function test(x::Int64)
     for  i in x
-        comparePatchPoints(
+        comparePointsTargetWithCorpus(
             neighbor,
             maskedImage,
             # Use same dummy point

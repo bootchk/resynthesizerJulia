@@ -67,7 +67,7 @@ function patchMatch(
 
         # Difference of value of patchPoint (from the target) to value of corresponding point in corpus
         # TEMP test specialized calls
-        differenceSum += comparePatchPoints(
+        differenceSum += comparePointsTargetWithCorpus(
             neighbor, # Neighbor caches values of a framed point in target
             corpusImage, patchPointCorpus   # framed point
             )

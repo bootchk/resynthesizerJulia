@@ -6,7 +6,7 @@
 
 Takes one image and a mask.
 
-Returns new image with the masked region synthesized from its surroundings.
+Returns new image with the masked region synthesized from its *entire* surroundings.
 
 The one image is first divided into a target and corpus image.
 The target image is the input.
