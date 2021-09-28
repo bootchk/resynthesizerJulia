@@ -18,6 +18,8 @@ The corpus is immutable.
 
 include("../resynthesizer.jl")
 
+include("../image/boundingBox.jl")
+
 function healSelection(
     image::AbstractArray{T,N},
     mask::AbstractArray{Bool,N},
@@ -28,25 +30,31 @@ function healSelection(
     targetImage = MaskedImage(image, mask)         # image is mutable
 
     #=
-    The corpus is an copy of the in image,
+    The corpus is a copy of the in image,
     slightly larger than,
     and surrounding the masked area of the target,
-    an with an inverted mask.
+    and with an inverted mask.
     The corpus is not mutated.
     =#
 
     copyImage = copy(image)
 
-    # get bounds of the mask
+    # get bounding box of the mask
+    boundingBox = BoundingBox(mask)
 
-    # extend the bounds
+    # Method of BoundingBox
+    expandOrShrink(boundingBox, 1) # TODO frisketDepth
+
+    # BitArray from bounding box, similar to mask
+    largerMask = bitMaskFrom(mask, boundingBox)
+
+    # Subtract the original mask to make a frisket (mask with a hole.)
 
     # subarray the image and the mask
 
     corpusImage = copyImage
 
     corpusMask = .!mask
-
 
     corpusImage = MaskedImage(corpusImage, corpusMask)
 
