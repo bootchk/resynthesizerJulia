@@ -21,5 +21,6 @@ mask = falses(size(image))
 mask[3:4, 2:3] .= true
 
 function test(image, mask)
-    healSelection(image, mask)
+    # frisketDepth 1
+    healSelection(image, mask, 1)
 end
