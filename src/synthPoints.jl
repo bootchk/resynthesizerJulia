@@ -8,6 +8,9 @@ Points in frame of the target image.
 =#
 
 
+using Random    # shuffle
+
+
 #=
 Return vector of points to be synthesized.
 
@@ -25,6 +28,7 @@ function generateSynthPoints(
         #Fail for N==1 )::Vector{CartesianIndex{DimensionCount}}
     result = findall(target.mask)
     @debug "SynthPoints type, size" size(result) typeof(result)
+    @debug "SynthPoints" result
     return result
 end
 

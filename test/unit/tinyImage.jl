@@ -4,10 +4,10 @@
 Create a tiny image as test data
 =#
 
-include("../src/image.jl")
+#include("../src/image.jl")
 
 function createTestMaskedImage()
-    imagePath = "/home/bootch/git/resynthesizerJulia/test/data/tinylighthouse.png"
+    imagePath = "/home/bootch/git/resynthesizerJulia/test/data/in/tinylighthouse.png"
     image = load(imagePath)
 
     # The mask is more or less in the middle, with a frisket

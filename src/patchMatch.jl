@@ -54,13 +54,21 @@ function patchMatch(
     !!! The patch may be empty:
     when the context is empty, on the first point of the first pass.
     =#
+    i = 0
+    # @debug "Patch match count of neighbors" length(synthPatch.neighbors)
     for neighbor in synthPatch.neighbors
 
-        # Mutate the point of the framed point.  CartesianIndex arithmetic.
+        #=
+        Skip the first neighbor.
+        As in the original code.
+        TODO omit the first neighbor from synthPatch
+        =#
+        i += 1
+        if i == 1
+            continue
+        end
 
-        # OLD offset points directly
-        # patchPointCorpus = corpusPatchCenterPoint + neighbor.offset
-        # NEW separate function to mutate
+        # CartesianIndex arithmetic to get corresponding point in corpus
         patchPointCorpus = offsetPatchPoint(corpusImage.image, corpusPatchCenterPoint, neighbor.offset)
 
         # is wild, might be out of bounds
@@ -74,7 +82,7 @@ function patchMatch(
 
         if differenceSum >= patchDiffToBeat
             # patch is already worse than previous best
-            # @debyg "Short circuit patch match"
+            # @debug "Short circuit patch match"
             break
         end
     end
@@ -84,8 +92,15 @@ function patchMatch(
     or is < and is computed over the entire patch
     =#
 
-    # Classify the betterment
     betterment = classifyBetterment(differenceSum, patchDiffToBeat)
+
+    #=
+    we don't have access to the distinguished patch point in target
+    corpusPatchCenterPoint is the patch distinguished point in corpus
+
+    synthPatch.neighbors[1].targetPoint
+    =#
+    @debug "Patch match" corpusPatchCenterPoint betterment differenceSum
 
     return ProbeResult(betterment, differenceSum)
 end

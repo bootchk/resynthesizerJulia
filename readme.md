@@ -6,6 +6,7 @@ Ported from C to Julia.
 Derived from https://github.com/bootchk/resynthesizer.git.
 Minimal changes to the algorithm, but significant refactoring.
 
+The main purpose: generalize to many dimensions and element types.
 
 ### Status
 

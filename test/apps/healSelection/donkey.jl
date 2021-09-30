@@ -48,7 +48,7 @@ using ColorTypes
   mask[175:275,100:230] .= true
 
   # frisketDepth = 40
-  out = healSelection(image, mask, 40)
+  out = healSelection(image, mask, 10)
 
   # Julia macro that compares file and expression
   @test_reference outPath out

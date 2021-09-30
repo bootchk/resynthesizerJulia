@@ -3,11 +3,11 @@ using Printf
 using FileIO
 
 # SortedOffsets depends on this
-include("../src/image.jl")
+include("../../src/image.jl")
 # include("../src/synthResult.jl")
 
 # the tested code
-include("../src/sortedOffsets.jl")
+include("../../src/sortedOffsets.jl")
 
 
 include("tinyImage.jl")
@@ -16,12 +16,14 @@ include("tinyImage.jl")
 
     testImage = createTestMaskedImage()
 
-    testSortedOffsets = createSortedOffsets(testImage.image)
+    testSortedOffsets = SortedOffsets(testImage.image)
 
     @debug "Sorted offsets" testSortedOffsets
 
     # offset 0,0 is not in
-    @test ! any( offset == CartesianIndex(0,0) for offset in testSortedOffsets )
+    @test ! any( offset == CartesianIndex(0,0) for offset in testSortedOffsets.offsets )
+
+    # TODO add .offsets below
 
     # lower right of image is last element of sortedOffsets
     # Is  this a robust test?  Other large distance offset could be in last element?

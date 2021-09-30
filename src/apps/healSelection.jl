@@ -3,6 +3,8 @@
 A specialization of the
 the resynthesizer algorithm,
 inpainting from context that is a nearby frisket.
+The results are better (than resynthesizing from the entire corpus)
+since pragmatically, nearby corpus is usually a "background".
 
 Takes one image and a mask.
 

@@ -23,9 +23,9 @@ Apps
 
 The algorithm as several applications.
 
-Most tests are the inpaint app.
-
-/render tests the render app
+/inpaint (inpaint from the entire context)
+/render
+/healSelection (inpaint from a frisket)
 
 
 Other

@@ -76,16 +76,13 @@ function comparePointsTargetWithCorpus(
     # result has the return type of the metric
     result::Float32 = zero(Float32)
 
-    # in bounds of the corpus (within the outer boundary)
-    # and in the selected region of corpus (within interior boundaries so to speak)
+    #=
+    Is in bounds of the corpus (within the outer boundary)
+    and in the selected region of corpus (within interior boundaries so to speak).
+
+    Named "clippedOrMaskedCorpus" in the original code.
+    =#
     if isInBoundsAndSelected(corpusImage, patchPointCorpus)
-        #=
-        OLD use a special metric, without wrapping it.
-        result = colordiff(corpusValue, neighbor.color)
-        =#
-        #=
-        Use a wrapper, but might be problems with type stability?
-        =#
         result = pointDifference(
             neighbor.value,                         # target value
             corpusImage.image[patchPointCorpus])    # corpus value
@@ -95,5 +92,6 @@ function comparePointsTargetWithCorpus(
         result = maxPointDifference
     end
 
+    # @debug "Compare point, yields" patchPointCorpus result
     return result
 end

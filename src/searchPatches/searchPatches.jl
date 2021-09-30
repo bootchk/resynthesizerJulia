@@ -99,6 +99,7 @@ function searchForPatchMatches(
         )::SearchResult{DimensionCount} where {ValueType, DimensionCount}
 
     patchDiffToBeat = startingPatchDiff(synthPatchCenterPoint)
+    @debug "searchForPatchMatches for patch at point" synthPatchCenterPoint
 
     matchPatchesAtHeuristicCorpusPoints(
         synthPatch,

@@ -123,7 +123,8 @@ function SortedOffsets(
 
     # call default constructor to encapsulate vector in a struct
     result = SortedOffsets(sortedOffsets)
-    @debug "SortedOffsets of type, size" typeof(result) size(result)
+    @debug "SortedOffsets of type, size" typeof(result) size(result.offsets)
+    @debug "SortedOffsets" result.offsets
     return result
 end
 

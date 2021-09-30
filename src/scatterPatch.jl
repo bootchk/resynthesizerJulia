@@ -292,7 +292,7 @@ function prepareScatterPatch(
 
     #=
     sortedOffsets might include the zero offset.
-    IOW the distinguished point is NOT its own neighbor.
+    IOW the distinguished point is its own neighbor.
     See sortedOffsets.jl
     =#
     for offset in sortedOffsets.offsets
@@ -314,6 +314,8 @@ function prepareScatterPatch(
             scatterPatch.neighbors[neighborIndex].offset = offset
             scatterPatch.neighbors[neighborIndex].targetPoint = wildPoint  # framed point
             scatterPatch.neighbors[neighborIndex].value = targetImage.image[wildPoint]
+
+            # @debug "Neighbor" neighborIndex scatterPatch.neighbors[neighborIndex]
 
             neighborIndex += 1
             if neighborIndex >= parameters.maxPatchSize
