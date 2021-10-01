@@ -10,8 +10,14 @@ include("null.jl")
 
 
 #=
-A tensor (usually 2D image) and same length mask.
-The mask defines a non-rectangular region, a "selection".
+A tensor (usually 2D image) and same length bit mask.
+
+The mask is often a "selection".
+That defines a non-rectangular region.
+More generally, a mask is another channel of an image,
+for example, defining transparency.
+More generally a mask can be a byte, with degrees of masking,
+e.g. for selection, defining a soft-edged or dithered selection.
 
 Parameterized.
 E.G. For usual notion of "2D image": T is Color, and N is 2.
@@ -23,9 +29,6 @@ E.G. For unusual notion of "poem": T is Char, and N is 2.
 Only the image and mask themselves are mutable.
 But the algorithm does not always mutate the image (on the target, not the corpus)
 and never mutates the mask.
-
-TODO rename selectionMask because that's what it is used for
-"mask" is over general
 =#
 
 struct MaskedImage{ValueType, DimensionCount}
@@ -60,6 +63,8 @@ end
 
 #=
 Return CartesionIndex with each element a rand in range of indices of each dimension of array.
+
+!!! Not unique, may repeat.
 
 General on N i.e. DimensionCount.
 We parameterize the function declaration on N.

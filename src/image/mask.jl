@@ -38,9 +38,6 @@ function subtractBool(x, y)
 end
 
 
-# NAND two similar masks.
-# TODO but not needed
-
 
 #=
 Subtract masks
@@ -58,8 +55,7 @@ function subtractMasks(mask1, mask2)
     # result = .-(mask1, mask2)
 
     result = subtractBool.(mask1, mask2)
-    println("subtractMasks")
-    println(result)
+    @debug "subtractMasks" result
     @assert typeof(result) <: BitArray
     return result
 end
@@ -91,9 +87,7 @@ function frisketMaskAroundMask(image, mask, frisketDepth)::BitArray
     # Punch out (nand) the original mask (the selection in the target) to make a frisket (mask with a hole.)
     result = subtractMasks(moreMask, mask)
 
-    println("frisket")
-    println(result)
-    println(typeof(result))
+    @debug "frisket" result typeof(result)
     @assert typeof(result) <: BitArray
     return result
 end

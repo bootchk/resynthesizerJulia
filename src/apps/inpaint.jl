@@ -29,7 +29,7 @@ function inpaint(
 
     # The corpus is an immutable copy of the in image, with an inverted mask
     invertedMask = .!mask
-    corpusImage = MaskedImage(copy(image), invertedMask)      # TODO enforce immutable
+    corpusImage = MaskedImage(copy(image), invertedMask)
     @assert isconcretetype(typeof(targetImage.mask))
 
     resynthesize(targetImage, corpusImage)

@@ -7,7 +7,7 @@ Masked region of image is the corpus.
 Returns new image of the same size
 synthesized in its entirety from the corpus.
 
-TODO render target of separately given dimensions
+FUTURE render target of separately given dimensions
 =#
 
 include("../resynthesizer.jl")

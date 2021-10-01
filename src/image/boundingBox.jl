@@ -50,7 +50,7 @@ function BoundingBox(
     # More or less: upper left point and lower right point
     result = BoundingBox(indices[1], indices[end])
 
-    println(result)
+    @debug "BoundingBox" result
     return result
 end
 
@@ -84,7 +84,7 @@ function BoundingBox(
     indicesOfTrue = indices[mask]
 
     result = BoundingBox(indicesOfTrue[1], indicesOfTrue[end])
-    println(result)
+    @debug "Bounding box of mask" result
     return result
 end
 
@@ -133,8 +133,7 @@ function expandOrShrink(
         )
 
     result = BoundingBox(least, most)
-    println("Expanded/shrunk boundingBox")
-    println(result)
+    @debug "Expanded/shrunk boundingBox" result
 
     #=
     Ensure the bounding box least is > 1's
@@ -179,8 +178,7 @@ function clampBoundingBoxToImage(
     most = clampMostOfBoundingBox(boundingBox1, BoundingBox(image))
 
     result = BoundingBox(least, most)
-    println("Clamped bounding box")
-    println(result)
+    @debug "Clamped bounding box" result
     return result
 end
 
@@ -200,8 +198,7 @@ function bitMaskFromInShapeOf(
     cartesianIndices = cartesianIndicesFrom(boundingBox)
     mask[cartesianIndices] .= true
 
-    println("Mask from boundingBox")
-    println(mask)
+    @debug "Mask from boundingBox" mask
     @assert typeof(mask) <: BitArray
     return mask
 end
@@ -219,9 +216,7 @@ function cartesianIndicesFrom(
              boundingBox.least[2]:boundingBox.most[2]
             )
         )
-    println("CI of boundingBox")
-    println(typeof(result))
-    println(result)
+    @debug "CI of boundingBox" typeof(result) result
     return result
 
 end

@@ -41,7 +41,7 @@ function matchPatchesAtHeuristicCorpusPoints(synthPatch, targetImage, corpusImag
             # wildPoint = PointInMaskedImage(wildIndex, corpusImage)
 
             if ! isInBoundsAndSelected(corpusImage, wildIndex)
-                # @debug "Clipped or masked heuristic point. ")
+                @debug "Clipped or masked heuristic point. " wildIndex
                 continue
             else
                 #=
@@ -82,8 +82,8 @@ end
 #=
 For the given neighbor,
 compute a wild corpus point which is in opposite relation (vector direction)
-to this neighbor's best matching corpus point
-as the relation from this neighbor to the origin of the ScatterPatch of this neighbor.
+to this neighbor's best matching corpus point.
+Opposite relation from this neighbor to the origin of the ScatterPatch of this neighbor.
 
 Wild means it is computed using coordinate arithmetic and might be:
 1) masked
