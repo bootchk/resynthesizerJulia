@@ -2,6 +2,9 @@
 include("pass.jl")
 include("../synthPoints.jl")
 
+
+
+
 #=
 Make passes over image.
 Each pass improves the image.
@@ -34,8 +37,12 @@ function makePassesUntilGoodEnough(
 
     allSynthPoints = generateOrderedSynthPoints(targetImage)
     @assert isconcretetype(typeof(allSynthPoints))
+    #=
+    The ordering is the same for all passes.
+    But later passes may resynthesize a subset.
+    =#
 
-    for i = 1:6  # MAX_PASSES, hardcoded here and in the original code
+    for passIndex = 1:6  # MAX_PASSES, hardcoded here and in the original code
 
         #=
         The algorithm works better/faster when
@@ -45,12 +52,12 @@ function makePassesUntilGoodEnough(
 
         TODO subset the synth points as in original
         =#
-        subsetSynthPoints = allSynthPoints  # !!! No subsetting.
+        subsetOfSynthPoints = subsetSynthPoints(allSynthPoints, passIndex)
 
         countBetterPixels = makeAPass(
             targetImage,
             corpusImage,
-            subsetSynthPoints,
+            subsetOfSynthPoints,
             synthPatch,
             synthResult,
             searchResult,
@@ -64,6 +71,32 @@ function makePassesUntilGoodEnough(
             @debug "Short circuit passes."
             break
         end
-        @debug  "Pass $(i) found $(countBetterPixels) betters."
+        @debug  "Pass $(passIndex) found $(countBetterPixels) betters."
    end
+end
+
+
+
+
+#=
+Original by Paul Harrison was not a subset, but a superset, with repeats
+
+Here, on third and subsequent passes,
+only resynthesize a smaller and smaller prefix of all points.
+=#
+function subsetSynthPoints(allPoints, passIndex)
+    # For test with no subsetting:  return allPoints
+
+    if passIndex == 1
+        return allPoints
+    elseif passIndex == 2
+        return allPoints
+    else
+        lastIndex = floor(Int, (0.75^(passIndex-1)) * length(allPoints))
+        #=
+         TODO assert inbounds??
+         Not sure that a view performs well
+        =#
+        return view(allPoints, 1:lastIndex)
+    end
 end

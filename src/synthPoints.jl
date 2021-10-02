@@ -1,10 +1,10 @@
 #=
-The "synth" region of a tensor is the set of points to be synthesized
+The "synth" region of an array is the set of points to be synthesized
 (to find a best match for, possibly with replacement.)
 
 Those points that are selected by a mask.
 
-Points are in frame of the target image.
+Points are in frame of the target array.
 =#
 
 

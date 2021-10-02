@@ -96,10 +96,10 @@ FUTURE gamma a parameter
 
 
 #=
-Specialized for Float32 in range 0,1.
+Specialized for Real in range 0,1.
 The constant derives from the range.
 =#
-function negLnCauchy(value::Float32)
+function negLnCauchy(value::Real)
 
     return log( (value/0.000459)^2 + 1 )
 end

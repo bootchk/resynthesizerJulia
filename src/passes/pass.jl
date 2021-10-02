@@ -6,8 +6,8 @@ include("../searchPatches/searchPatches.jl")
 #=
 A pass that searches.
 
-This understands that a pass is an iteration over the target pixels.
-The result of a pass is side effects on the image and other data.
+This understands that a pass is an iteration over the target values (pixels).
+The result of a pass is side effects on the array (image) and other data.
 The only non side effect is the returned value.
 
 Return the count of better points that the pass found.
@@ -28,29 +28,25 @@ function makeAPass(targetImage, corpusImage, targetPoints, synthPatch, synthResu
 
         synthPatchCenterPoint = targetPoint
 
-        # We pass synthResult because a patch can contain already synthesized point
         #=
-        OLD dynamic allocated
-        synthPatch = ScatterPatch(
-            targetImage,
-            synthPatchCenterPoint, # framed point
-            synthResult,
-            sortedOffsets)
+        The scatterPatch was passed in, so it was allocated once.)
+        Mutate it, instead of allocating a new one.
         =#
-
         patchSize = prepareScatterPatch(
             synthPatch,
             targetImage,           # frame
             synthPatchCenterPoint, # framed point
             synthResult,
             sortedOffsets)
-        # TODO pass patchSize to the search, and limit iteration over patch
+        #=
+        Assert for certain edge-case inputs, the synthPatch is not full size.
+        TODO pass patchSize to the search, and iterate over only the valid patch.
+        =#
 
         #=
         Set searchResult to the starting value of (NotBetter, Inf)
-        We can't use diff for this targetpoint from prior passes,
+        We can't use diff for this targetpoint/patch from prior passes,
         since, as discussed below, the patch changes.
-        A diff is for a patch, not a point.
         =#
         setStartSearchResult(searchResult, ProbeResult())
 
