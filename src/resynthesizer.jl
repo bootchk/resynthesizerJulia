@@ -94,7 +94,7 @@ and using code_warntype)
 =#
 
 include("image.jl")
-include("passes.jl")
+include("passes/passes.jl")
 include("result/synthResult.jl")
 include("result/searchResult.jl")
 

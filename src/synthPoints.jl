@@ -2,9 +2,9 @@
 The "synth" region of a tensor is the set of points to be synthesized
 (to find a best match for, possibly with replacement.)
 
+Those points that are selected by a mask.
 
-Those points that are masked.
-Points in frame of the target image.
+Points are in frame of the target image.
 =#
 
 
@@ -34,7 +34,7 @@ end
 
 
 #=
-Return vector of points to be synthesized.
+Return vector of all points to be synthesized.
 Ordered by the optional ordering function, else the default: shuffled.
 
 The order causes a "direction" of synthesis, e.g. brushfire from a boundary.

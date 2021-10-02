@@ -1,13 +1,13 @@
 
-using Printf
-using Random
-
 include("pass.jl")
-include("synthPoints.jl")
+include("../synthPoints.jl")
 
 #=
 Make passes over image.
 Each pass improves the image.
+The first pass "synthesizes", later passes "re" synthesize.
+The very earliest synthesized points are crude, so we synthesize them again.
+
 Break when improvement to the target is small (to a threshold of goodness)
 Otherwise to a maximum count of passes.
 
@@ -19,7 +19,8 @@ Formerly known as "refiner"
 #=
 Most preparation of was done earlier (especially for immutable, constant data)
 So we do little additional prep here, but pass all arguments, without change, to each pass.
-Except that we prepare targetPoints anew for each pass.
+
+Except that we choose a subset of synth points for each pass.
 =#
 function makePassesUntilGoodEnough(
         targetImage::MaskedImage{ValueType, DimensionCount},
@@ -29,23 +30,27 @@ function makePassesUntilGoodEnough(
         searchResult,
         sortedOffsets
         ) where{ValueType, DimensionCount}
+
+
+    allSynthPoints = generateOrderedSynthPoints(targetImage)
+    @assert isconcretetype(typeof(allSynthPoints))
+
     for i = 1:6  # MAX_PASSES, hardcoded here and in the original code
 
         #=
-        The nature of the algorithm is that the very earliest synthesized points are crude.
-        The algorithm works better/faster if in later passes we concentrate on those points
+        The algorithm works better/faster when
+        in later passes we concentrate on the earliest synthesized points
         and omit resynthesizing the later points.
         The original algorithm: on later passes, use a prefix subset of all target points.
 
-        TODO pass in candidateTargetPoints and rename this subsetCandidateTargetPoints
+        TODO subset the synth points as in original
         =#
-        targetPoints = generateOrderedSynthPoints(targetImage)
-        @assert isconcretetype(typeof(targetPoints))
+        subsetSynthPoints = allSynthPoints  # !!! No subsetting.
 
         countBetterPixels = makeAPass(
             targetImage,
             corpusImage,
-            targetPoints,
+            subsetSynthPoints,
             synthPatch,
             synthResult,
             searchResult,
@@ -55,7 +60,7 @@ function makePassesUntilGoodEnough(
         In the original: IMAGE_SYNTH_TERMINATE_FRACTION.
         Hardcoded, not  a parameter
         =#
-        if countBetterPixels < length(targetPoints) * 0.1
+        if countBetterPixels < length(allSynthPoints) * 0.1
             @debug "Short circuit passes."
             break
         end

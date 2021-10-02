@@ -85,12 +85,21 @@ TODO general for type of value
 This is for float values in range 0-1
 
 TODO table driven
-=#
-function negLnCauchy(value)
-    #=
-    As in C, log is natural log
 
-    0.117 FUTURE a parameter
-    =#
+FUTURE gamma a parameter
+=#
+
+
+
+#  As in C, log is natural log
+
+
+
+#=
+Specialized for Float32 in range 0,1.
+The constant derives from the range.
+=#
+function negLnCauchy(value::Float32)
+
     return log( (value/0.000459)^2 + 1 )
 end
